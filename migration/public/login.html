@@ -12,6 +12,8 @@
   <!-- style settings ------------>
   <link rel="stylesheet" href="Login.css">
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+  <script src="js/login.js"></script>
 </head>
 
 <body>
@@ -32,7 +34,7 @@
       <!-- Sign up content section -->
       <template v-if="isSignup">
         <div  class="signUpTab">
-          <form class="signUpForm" action="" method="post">
+          <form class="signUpForm">
 
             <!-- User sign up info -->
             <input class="inputBox" autocomplete="off" type="email" id="userEmail"
@@ -41,7 +43,7 @@
             placeholder="Password" required></input>
             <input class="inputBox" autocomplete="off" type="password" id="confirmedPass" placeholder="Re-enter Password" required></input>
 
-            <input class="submitBttn" type="submit" value="SIGN UP"></input>
+            <input class="submitBttn" type="submit" value="SIGN UP" onclick="submitSignup()"></input>
 
             <!-- Disclaimer -->
             <div class="disclaimer">
@@ -56,7 +58,7 @@
       <!-- Login content section -->
       <template v-else>
         <div class="loginTab">
-          <form class="loginForm" action="" method="post">
+          <form class="loginForm">
 
             <!-- User login info -->
             <input class="inputBox" autocomplete="off" type="email" id="userEmail"
