@@ -1,0 +1,24 @@
+{
+    "name": "sahoo-cancer-ersp",
+    "version": "1.0.0",
+    "description": "ERSP project for Sahoo research group",
+    "main": "index.js",
+    "scripts": {
+        "test": "echo \"Error: no test specified\" && exit 1",
+        "start": "node node_modules/keeling-js/entry.js",
+        "create-entry": "cp node_modules/keeling-js/entry.js ./app.js"
+    },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/alexSFfeng/Metastasis_Web.git"
+    },
+    "author": "",
+    "license": "ISC",
+    "bugs": {
+        "url": "https://github.com/alexSFfeng/Metastasis_Web/issues"
+    },
+    "homepage": "https://github.com/alexSFfeng/Metastasis_Web#readme",
+    "dependencies": {
+        "keeling-js": "^1.3.20"
+    }
+}
