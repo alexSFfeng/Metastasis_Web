@@ -2,7 +2,25 @@ var loginSignUp = new Vue({
   el : "#userForm",
   data : {
     isSignup : true
-  },
+    /*clickedS : {
+      backgroundColor : 'white'
+    },
+    clickedL : {
+      backgroundColor : '#e6e7e8'
+    }*/
+  },/*
+  watch:{
+    isSignup : function(){
+      if(isSignup){
+        clickedS.backgroundColor = "white";
+        clickedL.backgroundColor = "#e6e7e8";
+      }
+      else{
+        clickedL.backgroundColor = "white";
+        clickedS.backgroundColor = "#e6e7e8";
+      }
+    }
+  },*/
   methods : {
     sign : function(event){
       this.isSignup = true;

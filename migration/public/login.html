@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="en-US">
+
+<!-- Header information---->
+<head>
+  <title>Sahoo Cancer Analytics</title>
+  <meta charset="utf-8">
+  <meta name="keywords" content="Sahoo, Cancer Metastasis, Database, Cancer Analysis">
+  <meta name="description" content="Cancer Metastasis Database">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- style settings ------------>
+  <link rel="stylesheet" href="Login.css">
+  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/3.3.1/jquery.js"></script>
+  <script src="js/login.js"></script>
+</head>
+
+<body>
+
+  <div id="userForm" class="formContainer">
+
+    <!-- Divs for containing the sigup and login boxes -->
+    <div class="loginSignup">
+      <h2 id="signId" class="signUp" v-bind:class="{'active' : isSignup}"
+      v-on:click="sign">Sign Up</h2>
+      <h2 id="logId" class="login" v-bind:class="{'active' : !isSignup}"
+      v-on:click="log">Login</h2>
+    </div>
+
+    <!-- The two different tabs -->
+    <div class="contentTabs">
+
+      <!-- Sign up content section -->
+      <template v-if="isSignup">
+        <div  class="signUpTab">
+          <form class="signUpForm">
+
+            <!-- User sign up info -->
+            <input class="inputBox" autocomplete="off" type="email" id="userEmail"
+            placeholder="Email" required></input>
+            <input class="inputBox" autocomplete="off" type="password" id="userPass"
+            placeholder="Password" required></input>
+            <input class="inputBox" autocomplete="off" type="password" id="confirmedPass" placeholder="Re-enter Password" required></input>
+
+            <input class="submitBttn" id="signupBttn" type="submit" onclick="submitSignup()" value="SIGN UP"></input>
+
+            <!-- Disclaimer -->
+            <div class="disclaimer">
+              <p>By signing up, you are agreeing to our</p>
+              <p>Terms and Services</p>
+            </div>
+
+          </form>
+        </div>
+      </template>
+
+      <!-- Login content section -->
+      <template v-else>
+        <div class="loginTab">
+          <form class="loginForm" >
+
+            <!-- User login info -->
+            <input class="inputBox" autocomplete="off" type="email" id="userEmail"
+            placeholder="Email" required></input>
+            <input class="inputBox" autocomplete="off" type="password" id="userPass"
+            placeholder="Password" required></input>
+
+            <input class="submitBttn" id="loginBttn" type="submit" onclick="submitLogin()" value="LOGIN"></input>
+
+            <!-- Password forgotten -->
+            <div class="forgetPass">
+              <p>Forgot password?</p>
+            </div>
+
+          </form>
+        </div>
+      </template>
+
+    </div>
+  </div>
+
+  <script src=loginVue.js></script>
+
+</body>
+
+</html>
