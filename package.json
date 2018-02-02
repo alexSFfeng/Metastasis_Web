@@ -1,0 +1,26 @@
+{
+  "name": "metastasis_website",
+  "version": "1.0.0",
+  "description": "MEVN stack database driven website",
+  "main": "DB_Connect.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alexSFfeng/Metastasis_Web.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/alexSFfeng/Metastasis_Web/issues"
+  },
+  "homepage": "https://github.com/alexSFfeng/Metastasis_Web#readme",
+  "dependencies": {
+    "Express": "^3.0.1",
+    "body-parser": "^1.18.2",
+    "express": "^4.16.2",
+    "mongodb": "^3.0.2",
+    "nodemon": "^1.14.11"
+  }
+}
