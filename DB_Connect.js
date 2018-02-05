@@ -20,8 +20,7 @@ app.post('/signup',function(req,res){
   var targetpw = req.body.pw;
   console.log("This is the entered email: " + targetEmail)
   console.log("This is the entered password: " + targetpw);
-  res.send("OK~");
-  res.sendStatus(200);
+  res.status(200).send("Bye bye~");
 });
 
 // signing in to the web, comparing entered info with database info

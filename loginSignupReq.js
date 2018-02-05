@@ -22,7 +22,7 @@ function submitSignup(e) {
     },
     success: function(res) {
       console.log("success sign up");
-      window.location.href=res;
+      alert(res);
     }
   });
 

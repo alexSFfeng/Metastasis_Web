@@ -1,0 +1,79 @@
+/* Simple normalization */
+* {
+  margin : 0;
+  padding: 0;
+}
+
+body {
+  color: #666;
+  background-color: #f1f2f2;
+  font-size: 18px;
+  font-family: monospace,sans-serif;
+  line-height: 40px;
+}
+
+.formContainer {
+  background-color: white;
+  width: 400px;
+  margin: 3em auto;
+  margin-top : 10%;
+  box-shadow: 5px 10px 18px #888888;
+  border-collapse: separate;
+  border-radius: 12px;
+
+}
+
+.formContainer .loginSignup {
+  overflow: hidden;
+  border-radius: 12px 12px 0px 0px;
+
+}
+
+.signUp, .login{
+  overflow: hidden;
+  float: left;
+  width: 50%;
+  display: inline;
+  text-align: center;
+  font-weight: 500;
+  background-color: #e6e7e8
+}
+
+/*.gray {
+  background-color: #e6e7e8
+}*/
+
+.active {
+  background-color: white
+}
+
+.contentTabs {
+  padding: 1em;
+}
+
+.inputBox {
+  box-sizing: border-box;
+  padding: .8em 0 10px .8em;
+  color:inherit;
+  font-family: inherit;
+  font-size: 16px;
+  margin: 0 0 .8em 0;
+  width : 100%;
+}
+
+.submitBttn {
+  width : 100%;
+  font-size: 26px;
+  padding : 10px 0px;
+  background-color: #4488f4;
+  border: none;
+  color: white;
+}
+
+.submitBttn:hover{
+  background-color: #6aa2fc;
+}
+
+.forgetPass, .disclaimer {
+  text-align: center;
+}
