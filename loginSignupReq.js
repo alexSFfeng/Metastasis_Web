@@ -22,7 +22,7 @@ function submitSignup(e) {
     },
     success: function(res) {
       console.log("success sign up");
-      alert(res);
+      console.log(res);
     }
   });
 
@@ -45,6 +45,7 @@ function submitLogin(e){
     },
     success: function(res){
       console.log("success login");
+      console.log(res);
       window.location.href=res;
     }
   });
