@@ -52,11 +52,6 @@ app.get('/matched', function(req,res) {
   res.sendFile( __dirname + "/profile.html");
 });
 
-app.get('/Error', function(req,res) {
-  res.send("Invalid Password");
-
-})
-
 // signing in to the web, comparing entered info with database info
 app.post('/login', function(req, res) {
 
@@ -76,11 +71,10 @@ app.post('/login', function(req, res) {
 
       // check for password match and redirect accordingly
       if (myDoc) {
-        console.log(myDoc);
         if (myDoc.password == targetpw) {
           res.send("matched");
         } else {
-          res.send("Error");
+          res.status(500).end();
         }
 
       }else{

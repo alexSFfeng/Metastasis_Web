@@ -6,6 +6,11 @@ function submitSignup(e) {
   var password = $("#userPass").val().trim();
   var passwordVer = $("#confirmedPass").val().trim();
 
+  if(email == "" || password == "" || passwordVer == ""){
+    alert("Please fill out all fields");
+    return;
+  }
+
   /* password validation */
   if (password != passwordVer) {
     alert("Please enter the same password");
@@ -35,6 +40,11 @@ function submitLogin(e){
   var email = $('#userEmail').val().trim();
   var password = $('#userPass').val().trim();
 
+  if(email == "" || password == ""){
+    alert("Please fill out all fields");
+    return;
+  }
+
   /* call to server to match with user database info */
   $.ajax({
     url: "/login",
@@ -43,10 +53,15 @@ function submitLogin(e){
       useremail : email,
       userpw : password
     },
-    success: function(res){
-      console.log("success login");
+    success : function(res){
+      alert("success login");
       console.log(res);
       window.location.href=res;
+    },
+    error : function(res){
+      alert("Incorrect Password");
+      $('#userPass').val("");
+      console.log($('#userPass').val());
     }
   });
 
