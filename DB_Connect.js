@@ -87,6 +87,53 @@ app.post('/login', function(req, res) {
   });
 });
 
+// testing query filters
+app.get('/find',function(req,res){
+  res.write("<h1 style='text-align:center;'>This is data in \"" + userDB + "\" collection</h1>");
+
+  // connect to testing database
+  MongoClient.connect(url, function(err,client){
+    if(err){
+      console.log("unable to connect");
+      throw err;
+    }
+
+    // open up the user database
+    var db = client.db(userDB);
+    console.log("Begin querying existing data in test db");
+
+    /*
+     * !!!!!! PUT YOUR TEST FILTER CONDITION IN THE find bracket {} !!!!!!!
+     */
+    db.collection("Test").find({}).toArray(function(err, result) {
+      if (err) throw err;
+      if(result){
+        // loop through the results found
+        for(var i = 0; i < result.length; i++){
+
+          // store the keys of each object found
+          var keys = Object.keys(result[i]);
+
+          // display each key and value to the browser
+          for(var j = 1; j < keys.length; j ++){
+            res.write("<p style='text-align:center'>");
+            res.write("" + keys[j] + " : " + result[i][keys[j]]);
+            res.write("<br></p>");
+          }
+          res.write("<hr>");
+        }
+      }
+      // nothing found
+      else{
+        res.write("No data found");
+      }
+      res.end();
+    });
+
+    client.close();
+  });
+});
+
 // listening to port
 app.listen(config.port,function(){
   console.log(`Node started on port ${config.port} Successfully`);
