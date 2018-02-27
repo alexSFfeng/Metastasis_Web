@@ -55,11 +55,10 @@ function submitLogin(e){
     },
     success : function(res){
       alert("success login");
-      console.log(res);
       window.location.href=res;
     },
     error : function(res){
-      alert("Incorrect Password");
+      alert(res.responseText);
       $('#userPass').val("");
       console.log($('#userPass').val());
     }

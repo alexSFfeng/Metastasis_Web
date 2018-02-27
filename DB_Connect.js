@@ -44,7 +44,7 @@ app.post('/signup',function(req,res){
 
     client.close();
   });
-
+  res.end();
 });
 
 // redirection to the user profile
@@ -71,20 +71,23 @@ app.post('/login', function(req, res) {
 
       // check for password match and redirect accordingly
       if (myDoc) {
+        console.log(myDoc);
         if (myDoc.password == targetpw) {
           res.send("matched");
         } else {
-          res.status(500).end();
+          console.log("Invalid password");
+          res.status(406).send("invalid password/username");
         }
 
       }else{
         console.log("User not found!");
+        res.status(406).send("invalid password/username");
       }
     });
 
     client.close();
-
   });
+
 });
 
 // testing query filters
