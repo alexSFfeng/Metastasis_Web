@@ -1,0 +1,75 @@
+/* Simple normalization */
+* {
+  margin : 0;
+  padding: 0;
+}
+
+body {
+  color: #666;
+  background-color: #f1f2f2;
+  font-size: 18px;
+  font-family: monospace,sans-serif;
+  line-height: 40px;
+}
+
+.banner{
+  background-color: #e6ebf4;
+  color: black;
+  overflow: hidden;
+  width : 100%;
+}
+
+.banner a {
+  float:left;
+  text-align: center;
+  font-size: 3em;
+  font-family: monospace,sans-serif;
+  padding : 10px 10px;
+  text-decoration: none;
+  color:black;
+}
+
+.banner ul{
+  display: table-cell;
+  width: 100%;
+}
+
+.banner ul li{
+  display: table-row;
+}
+
+.IconPanel {
+  text-align: center;
+  background-color: white;
+}
+
+#dataSearch {
+  height:100%;
+  width:25vw;
+}
+
+/* Search box styles */
+#searchBox {
+  overflow: hidden;
+  font-size: 26px;
+  text-align: center;
+  margin: 10px auto;
+}
+
+#searchID {
+  width:70%;
+  font-size: 26px;
+  vertical-align: middle;
+  padding: 5px;
+}
+
+#queryBttn {
+  font-size: 26px;
+  width:15%;
+  box-sizing: border-box;
+  background-color: #4488f4;
+  border: none;
+  color: white;
+  vertical-align: middle;
+  padding: 5px;
+}

@@ -108,9 +108,9 @@ app.get('/find',function(req,res){
     /*
      * !!!!!! PUT YOUR TEST FILTER CONDITION IN THE find bracket {} !!!!!!!
      */
-    db.collection("Test").find({}).toArray(function(err, result) {
+    db.collection("Test").find({Name: "Baby"}).toArray(function(err, result) {
       if (err) throw err;
-      if(result){
+      if(result.length > 0){
         // loop through the results found
         for(var i = 0; i < result.length; i++){
 
