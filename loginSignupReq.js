@@ -1,6 +1,6 @@
 /* sign up function */
 function submitSignup(e) {
-  event.preventDefault();
+  e.preventDefault();
   console.log("clicked signup submission button");
   var email = $("#userEmail").val().trim();
   var password = $("#userPass").val().trim();

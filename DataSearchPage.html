@@ -13,6 +13,7 @@
   <link rel="stylesheet" href="./css/searchPage.css">
   <script src="https://cdn.jsdelivr.net/npm/vue"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
+  <script src="searchQuery.js"></script>
 
 </head>
 <body>
@@ -26,13 +27,82 @@
     </nav>
   </div>
 
-  <div class="IconPanel">
-    <img id="dataSearch" src="./images/searching.jpg" alt="database image"/>
+  <div class="parallax"> </div>
+
+  <!-- ID search box -->
+  <div id="searchBox">
+    <input id="searchID" placeholder="Search By GSE_ID (experiment set id)" type="text"></input>
+    <input class="submitBttn" id="queryBttn" type="button" value="SEARCH" onclick="sendQuery()">
   </div>
 
-  <div id="searchBox">
-      <input id="searchID" placeholder="Search By GSE_ID (experiment set id)" type="text"></input>
-      <input class="submitBttn" id="queryBttn" type="button" value="SEARCH">
+  <!-- Advanced search option for user to specify different requirements -->
+  <div id="advanceSearch">
+
+    <div class="panel">
+      <h3 id="advanced">Advanced Search
+        <span class="arrow" v-bind:class="{'active' : drop}" v-on:click="toggle">&#8691;</span>
+      </h3>
+
+    </div>
+
+
+    <!-- Drop down advanced search box -->
+    <transition name="slide-fade">
+      <template v-if="drop">
+        <div class="panel optionBox">
+          <h2>Patient Info</h2><hr />
+          <div class="patientInfo">
+            <div class="options">
+            <label>Gender: </label>
+            <select class="options" id="gender">
+                <option value="-1"></option>
+                <option value="1">Male-only</option>
+                <option value="0">Female-only</option>
+            </select>
+            </div>
+
+
+            <div class="options">
+            <label>Race/Ethnicity: </label>
+            <select class="options" id="race">
+                <option selected value=""></option>
+                <option value="Asian">Asian</option>
+                <option value="Caucasian">Caucasian</option>
+                <option value="Hispanic">Hispanic</option>
+                <option value="American Indian">American Indian</option>
+                <option value="Eastern Indian">Eastern Indian</option>
+                <option value="Asian Indian">Asian Indian</option>
+                <option value="African-American">African-American</option>
+            </select>
+            </div>
+
+            <div class="options">
+            <label>Cancer Type: </label>
+            <select class="options" id="cancer_type">
+                <option selected value="0"></option>
+                <option value="-1">Metastasis</option>
+                <option value="1">Primary</option>
+            </select>
+            </div>
+
+            <br />
+            <label>Age Range: </label>
+            <input id="Age_Start" type="number" min="0" placeholder="Start Age"></input>
+            <span style="font-size:20px;">-------</span>
+            <input id="Age_End" type="number" min="0" placeholder="End Age"></input>
+          </div>
+        </div>
+      </template>
+    </transition>
+
+    <div class="displayResult">
+
+    </div>
+
   </div>
+
+  <script src="searchVue.js"></script>
+
 </body>
+
 </html>
