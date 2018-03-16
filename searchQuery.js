@@ -30,26 +30,51 @@ function sendQuery(e){
     alert("Age end range must be greater or equal to aget start range");
     return;
   }
+
+  // Data array url building
+  var dataArr = [];
+
+  if(gse_ID != undefined){dataArr.push("gse_id="+gse_ID);}
+  if(gender != undefined){dataArr.push("gender="+gender);}
+  if(race != undefined){dataArr.push("race="+race);}
+  if(cancer_type != undefined){dataArr.push("cancer_type="+cancer_type);}
+  if(age_start != undefined){dataArr.push("age_start="+age_start);}
+  if(age_end != undefined){dataArr.push("age_end="+age_end);}
+
+  // building the target query url
+  var targetURL = "/search?";
+  var i = 0;
+  if(dataArr.length > i){
+    targetURL += dataArr[i];
+    i++;
+  }
+
+  while(i < dataArr.length){
+    targetURL += "&";
+    targetURL += dataArr[i];
+    i++;
+  }
+
+  console.log(targetURL);
+
+
+
   /*--------------------------AGE RANGE CHECK ---------------------------*/
 
   $.ajax({
-    url: '/search?gseID='+gse_ID+'&gender='+gender+'&race='+race+'&cancer_type='
-    + cancer_type +'&agerange=' + age_start + "-"+ age_end,
+    url: targetURL,
     method : "get",
-    data: {
-      GSE_Id : gse_ID,
-      Gender : gender,
-      Patient_Race : race,
-      Cancer_Type : cancer_type,
-      Age_Start : age_start,
-      Age_End : age_end
-    },
     success : function(res){
-      alert("success");
+      console.log(res);
+      alert(res[0].name);
     },
     error : function(res){
       alert("failed");
     }
   });
+
+}
+
+function generateTable(dataArr){
 
 }

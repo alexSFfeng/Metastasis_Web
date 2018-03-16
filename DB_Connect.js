@@ -90,9 +90,25 @@ app.post('/login', function(req, res) {
 
 });
 
+/*-------------------- SEARCH PAGE REDIRECT --------------------------- */
+app.get('/DataSearchPage',function(req,res){
+  res.sendFile( __dirname + "/DataSearchPage.html");
+})
+
+
+app.get('/search',function(req,res){
+  var dummyData = [ {name:"Person 1", age: 30},
+                    {name:"Person 2", age: 25},
+                    {name:"Person 3", age: 55}];
+
+  
+  res.send(dummyData);
+})
+
 // testing query filters
 app.get('/find',function(req,res){
-  res.write("<h1 style='text-align:center;'>This is data in \"" + userDB + "\" collection</h1>");
+  res.write("<h1 style='text-align:center;'>This is data in \"" + userDB + "\"  \
+            collection</h1>");
 
   // connect to testing database
   MongoClient.connect(url, function(err,client){
