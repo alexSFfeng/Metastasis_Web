@@ -1,3 +1,5 @@
+var displayData;
+var currentShown;
 /* ------ search query : make ajax call to provide query conditions -------- */
 function sendQuery(e){
 
@@ -65,8 +67,9 @@ function sendQuery(e){
     url: targetURL,
     method : "get",
     success : function(res){
-      console.log(res);
-      alert(res[0].name);
+      displayData = res;
+      generateTable(displayData);
+      alert("table generated");
     },
     error : function(res){
       alert("failed");
@@ -76,5 +79,30 @@ function sendQuery(e){
 }
 
 function generateTable(dataArr){
+  for( currentShown = 0; currentShown < dataArr.length && currentShown < 2; currentShown ++){
+    $('#dataTable > tbody').append(
+      '<tr> \
+       <td><input type="checkbox" id=' + currentShown + '></input></td> \
+       <td>' + dataArr[currentShown].name + '</td> \
+       <td>' + dataArr[currentShown].age + '</td> \
+       </tr>'
+    );
+  }
+}
 
+function showMore(){
+  var oldShown = currentShown;
+  if(displayData != undefined){
+    console.log(currentShown);
+
+    for(; currentShown < oldShown+10 && currentShown < displayData.length; currentShown ++){
+      $('#dataTable > tbody').append(
+        '<tr> \
+         <td><input type="checkbox" id=' + currentShown + '></input></td> \
+         <td>' + displayData[currentShown].name + '</td> \
+         <td>' + displayData[currentShown].age + '</td> \
+         </tr>'
+      );
+    }
+  }
 }

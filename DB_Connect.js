@@ -97,11 +97,12 @@ app.get('/DataSearchPage',function(req,res){
 
 
 app.get('/search',function(req,res){
+  console.log("got in");
   var dummyData = [ {name:"Person 1", age: 30},
                     {name:"Person 2", age: 25},
                     {name:"Person 3", age: 55}];
 
-  
+
   res.send(dummyData);
 })
 

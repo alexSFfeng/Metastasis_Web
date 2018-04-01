@@ -11,7 +11,7 @@
 
   <!-- style settings ------------>
   <link rel="stylesheet" href="./css/searchPage.css">
-  <script src="https://cdn.jsdelivr.net/npm/vue"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.16/vue.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="searchQuery.js"></script>
 
@@ -53,18 +53,18 @@
           <h2>Patient Info</h2><hr />
           <div class="patientInfo">
             <div class="options">
-            <label>Gender: </label>
-            <select class="options" id="gender">
+              <label>Gender: </label>
+              <select class="options" id="gender">
                 <option value="-1"></option>
                 <option value="1">Male-only</option>
                 <option value="0">Female-only</option>
-            </select>
+              </select>
             </div>
 
 
             <div class="options">
-            <label>Race/Ethnicity: </label>
-            <select class="options" id="race">
+              <label>Race/Ethnicity: </label>
+              <select class="options" id="race">
                 <option selected value=""></option>
                 <option value="Asian">Asian</option>
                 <option value="Caucasian">Caucasian</option>
@@ -73,16 +73,16 @@
                 <option value="Eastern Indian">Eastern Indian</option>
                 <option value="Asian Indian">Asian Indian</option>
                 <option value="African-American">African-American</option>
-            </select>
+              </select>
             </div>
 
             <div class="options">
-            <label>Cancer Type: </label>
-            <select class="options" id="cancer_type">
+              <label>Cancer Type: </label>
+              <select class="options" id="cancer_type">
                 <option selected value="0"></option>
                 <option value="-1">Metastasis</option>
                 <option value="1">Primary</option>
-            </select>
+              </select>
             </div>
 
             <br />
@@ -94,13 +94,42 @@
         </div>
       </template>
     </transition>
-    <!------------------------- END OF DROP DOWN BOX -------------------->
-
-    <div class="displayResult">
-
-    </div>
-
   </div>
+  <!------------------------- END OF DROP DOWN BOX -------------------->
+
+  <div class="displayResult">
+    <table id="dataTable">
+
+      <!-- ------------ TABLE HEADER ----------- -->
+      <thead>
+        <tr>
+          <th><input type="checkbox" name="select_all" value="1" id="select-all"></th>
+          <th>Gene</th>
+          <th>Standard Deviation*</th>
+        </tr>
+      </thead>
+
+      <!-- ------------ TABLE BODY ----------- -->
+      <tbody>
+      </tbody>
+
+      <!-- ------------ TABLE FOOTER ----------- -->
+      <tfoot>
+        <tr id="showMore">
+          <td colspan="3">
+            <button type="button" onclick="showMore()">SHOW MORE (10)</button>
+          </td>
+        </tr>
+        <tr>
+          <th><input type="checkbox" name="select_all" value="1" id="select-all"></th>
+          <th>Gene</th>
+          <th>Standard Deviation*</th>
+        </tr>
+      </tfoot>
+
+    </table>
+  </div>
+
 
   <script src="searchVue.js"></script>
 
