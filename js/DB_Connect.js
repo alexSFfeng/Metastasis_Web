@@ -2,7 +2,7 @@
 var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
-var config = require('./config/DB_Connect.js');
+var config = require('../config/DB_Connect.js');
 const url = 'mongodb://localhost:27017';
 const MongoClient = require('mongodb').MongoClient;
 const userDB = "UserInfo";
@@ -11,7 +11,7 @@ const userDB = "UserInfo";
 var app = express();
 
 // change default page to be LoginPage.html
-app.use(express.static(__dirname, {index:'LoginPage.html'}));
+app.use(express.static(path.join(__dirname,"../"), {index:'LoginPage.html'}));
 app.use(bodyParser.urlencoded({extended: true}));
 app.use(bodyParser.json());
 

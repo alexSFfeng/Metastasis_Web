@@ -78,6 +78,7 @@ function sendQuery(e){
 
 }
 
+// generate the first table.
 function generateTable(dataArr){
   for( currentShown = 0; currentShown < dataArr.length && currentShown < 2; currentShown ++){
     $('#dataTable > tbody').append(
@@ -90,6 +91,7 @@ function generateTable(dataArr){
   }
 }
 
+// show more data in the data array
 function showMore(){
   var oldShown = currentShown;
   if(displayData != undefined){

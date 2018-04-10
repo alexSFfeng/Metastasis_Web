@@ -13,7 +13,9 @@
   <link rel="stylesheet" href="./css/searchPage.css">
   <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.16/vue.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
-  <script src="searchQuery.js"></script>
+  <script src="https://d3js.org/d3.v5.min.js"></script>
+  <script src="./js/searchQuery.js"></script>
+  <script src="./js/d3Visual.js"></script>
 
 </head>
 <body>
@@ -103,7 +105,7 @@
       <!-- ------------ TABLE HEADER ----------- -->
       <thead>
         <tr>
-          <th><input type="checkbox" name="select_all" value="1" id="select-all"></th>
+          <th><input type="checkbox" name="select_all" value="1" id="select-all1"></th>
           <th>Gene</th>
           <th>Standard Deviation*</th>
         </tr>
@@ -121,7 +123,7 @@
           </td>
         </tr>
         <tr>
-          <th><input type="checkbox" name="select_all" value="1" id="select-all"></th>
+          <th><input type="checkbox" name="select_all" value="1" id="select-all2"></th>
           <th>Gene</th>
           <th>Standard Deviation*</th>
         </tr>
@@ -131,7 +133,7 @@
   </div>
 
 
-  <script src="searchVue.js"></script>
+  <script src="./js/searchVue.js"></script>
 
 </body>
 
