@@ -17,4 +17,4 @@ var loginSignUp = new Vue({
       console.log(this.isSignup);
     }
   }
-})
+});

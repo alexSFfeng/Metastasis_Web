@@ -11,7 +11,7 @@
 
   <!-- style settings ------------>
   <link rel="stylesheet" href="./css/searchPage.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.16/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="./js/searchQuery.js"></script>
@@ -121,6 +121,11 @@
           <td colspan="3">
             <button type="button" onclick="showMore()">SHOW MORE (10)</button>
           </td>
+        </tr>
+        <tr id="graphBttn">
+            <td colspan="3">
+                <button type="button" onclick="generateGraph()">GENERATE GRAPH</button>
+            </td>
         </tr>
         <tr>
           <th><input type="checkbox" name="select_all" value="1" id="select-all2"></th>

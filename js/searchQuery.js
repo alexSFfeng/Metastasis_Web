@@ -80,10 +80,17 @@ function sendQuery(e){
 
 // generate the first table.
 function generateTable(dataArr){
+
+  // it is a new search so first empty previous tbody before populating new data.
+  $('#dataTable > tbody').empty();
+
+  if(dataArr.length == 0){
+    alert("No results matched");
+  }
   for( currentShown = 0; currentShown < dataArr.length && currentShown < 2; currentShown ++){
     $('#dataTable > tbody').append(
       '<tr> \
-       <td><input type="checkbox" id=' + currentShown + '></input></td> \
+       <td><input type="checkbox" onclick="incChecked(this)" id=' + currentShown + '></input></td> \
        <td>' + dataArr[currentShown].name + '</td> \
        <td>' + dataArr[currentShown].age + '</td> \
        </tr>'
@@ -100,7 +107,7 @@ function showMore(){
     for(; currentShown < oldShown+10 && currentShown < displayData.length; currentShown ++){
       $('#dataTable > tbody').append(
         '<tr> \
-         <td><input type="checkbox" id=' + currentShown + '></input></td> \
+         <td><input type="checkbox" onclick="incChecked(this)" id=' + currentShown + '></input></td> \
          <td>' + displayData[currentShown].name + '</td> \
          <td>' + displayData[currentShown].age + '</td> \
          </tr>'
