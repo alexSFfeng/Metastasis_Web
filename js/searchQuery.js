@@ -1,5 +1,6 @@
 var displayData;
 var currentShown;
+const geneShownLimit = 10;
 /* ------ search query : make ajax call to provide query conditions -------- */
 function sendQuery(e){
 
@@ -74,10 +75,19 @@ function sendQuery(e){
 
 // generate the first table.
 function generateTable(dataArr){
-  for( currentShown = 0; currentShown < dataArr.length && currentShown < 2; currentShown ++){
+
+  // it is a new search so first empty previous tbody before populating new data.
+  $('#dataTable > tbody').empty();
+
+  if(dataArr.length == 0){
+    alert("No results matched");
+  }
+  for( currentShown = 0; currentShown < dataArr.length &&
+       currentShown < geneShownLimit; currentShown ++){
     $('#dataTable > tbody').append(
       '<tr> \
-       <td><input type="checkbox" id=' + currentShown + '></input></td> \
+
+       <td><input type="checkbox" onclick="incChecked(this)" id=' + currentShown + '></input></td> \
        <td>' + dataArr[currentShown].gene + '</td> \
        <td>' + dataArr[currentShown].SD + '</td> \
        </tr>'
@@ -91,10 +101,12 @@ function showMore(){
   if(displayData != undefined){
     console.log(currentShown);
 
-    for(; currentShown < oldShown+10 && currentShown < displayData.length; currentShown ++){
+    // show more 10 more data entries
+    for( ; currentShown < oldShown+geneShownLimit &&
+         currentShown < displayData.length; currentShown ++){
       $('#dataTable > tbody').append(
         '<tr> \
-         <td><input type="checkbox" id=' + currentShown + '></input></td> \
+         <td><input type="checkbox" onclick="incChecked(this)" id=' + currentShown + '></input></td> \
          <td>' + displayData[currentShown].gene + '</td> \
          <td>' + displayData[currentShown].SD + '</td> \
          </tr>'

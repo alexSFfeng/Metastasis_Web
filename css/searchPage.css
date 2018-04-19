@@ -205,7 +205,7 @@ body {
   width: 95%;
   font-family: arial, sans-serif;
   border-collapse: collapse;
-  margin: 10px auto;
+  margin: 20px auto;
 }
 
 #dataTable th, #dataTable td {
@@ -220,12 +220,12 @@ thead, tfoot {
   color: white;
 }
 
-#showMore td{
+#showMore td, #graphBttn td{
   padding:0px;
   margin: 0;
 }
 
-#showMore button {
+#showMore button, #graphBttn button{
   box-sizing: border-box;
   border:2px dashed grey;
   background-color: #4488f4;
@@ -235,6 +235,46 @@ thead, tfoot {
   padding: 8px;
 }
 
-#showMore button:hover {
+#showMore button:hover, #graphBttn button:hover {
   background-color: #66aaf4;
+}
+
+#graphBttn {
+  display: none;
+}
+
+/*-------------Graph Popup Page ---------------------*/
+.popup {
+    display: none;
+    position: fixed;
+    z-index: 2; /* Sit on top */
+    left: 0;
+    top: 0;
+    width: 100%; /* Full width */
+    height: 100%; /* Full height */
+    overflow: auto; /* Enable scroll if needed */
+    background-color: rgba(0,0,0,0.4); /* Black w/ opacity */
+}
+
+.graphContent {
+  background-color: white;
+  margin : 15% auto;
+  padding : 25px;
+  box-shadow: 5px 8px #777777;
+  width : 80%;
+}
+
+.closeIcon {
+  float: right;
+  font-size: 36px;
+  color:black;
+}
+
+.closeIcon:hover{
+  color:grey;
+}
+
+.graphDescription {
+  margin-left: 1.2em;
+  font-size: 1.5em;
 }

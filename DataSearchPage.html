@@ -11,7 +11,7 @@
 
   <!-- style settings ------------>
   <link rel="stylesheet" href="./css/searchPage.css">
-  <script src="https://cdnjs.cloudflare.com/ajax/libs/vue/0.12.16/vue.min.js"></script>
+  <script src="https://cdn.jsdelivr.net/npm/vue@2.5.16/dist/vue.min.js"></script>
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.2.1/jquery.min.js"></script>
   <script src="https://d3js.org/d3.v5.min.js"></script>
   <script src="./js/searchQuery.js"></script>
@@ -122,6 +122,11 @@
             <button type="button" onclick="showMore()">SHOW MORE (10)</button>
           </td>
         </tr>
+        <tr id="graphBttn">
+            <td colspan="3">
+                <button type="button" onclick="generateGraph()">GENERATE GRAPH</button>
+            </td>
+        </tr>
         <tr>
           <th><input type="checkbox" name="select_all" value="1" id="select-all2"></th>
           <th>Gene</th>
@@ -132,11 +137,21 @@
     </table>
   </div>
 
+  <div class="popup" id="modal">
+    <div class="graphContent">
+
+      <span class="closeIcon" onclick="closeModal()">&times;</span>
+      <br />
+      <p class="graphDescription">Graph Generated 📈:</p>
+      <br />
+
+    </div>
+  </div>
+
   <div class="testdata">
     <input type="submit" id="insdata" onclick="insert_data()" value="insert test data"></input><br>
     <input type="submit" id="deldata" onclick="delete_data()" value="delete test data"></input><br>
   </div>
-
 
   <script src="./js/searchVue.js"></script>
 
