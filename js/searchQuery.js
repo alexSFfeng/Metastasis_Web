@@ -44,25 +44,19 @@ function sendQuery(e){
   if(age_end != undefined){dataArr.push("age_end="+age_end);}
 
   // building the target query url
-  var targetURL = "/search?";
-  var i = 0;
-  if(dataArr.length > i){
-    targetURL += dataArr[i];
-    i++;
+  var targetURL = "/search";
+  if (dataArr.length > 0) {
+    targetURL += "?";
+    var i = 0;
+    while(i < dataArr.length){
+      targetURL += dataArr[i];
+      if (i < dataArr.length - 1) targetURL += "&";
+      i++;
+    }
   }
-
-  while(i < dataArr.length){
-    targetURL += "&";
-    targetURL += dataArr[i];
-    i++;
-  }
-
   console.log(targetURL);
 
-
-
   /*--------------------------AGE RANGE CHECK ---------------------------*/
-
   $.ajax({
     url: targetURL,
     method : "get",
@@ -84,8 +78,8 @@ function generateTable(dataArr){
     $('#dataTable > tbody').append(
       '<tr> \
        <td><input type="checkbox" id=' + currentShown + '></input></td> \
-       <td>' + dataArr[currentShown].name + '</td> \
-       <td>' + dataArr[currentShown].age + '</td> \
+       <td>' + dataArr[currentShown].gene + '</td> \
+       <td>' + dataArr[currentShown].SD + '</td> \
        </tr>'
     );
   }
@@ -101,10 +95,31 @@ function showMore(){
       $('#dataTable > tbody').append(
         '<tr> \
          <td><input type="checkbox" id=' + currentShown + '></input></td> \
-         <td>' + displayData[currentShown].name + '</td> \
-         <td>' + displayData[currentShown].age + '</td> \
+         <td>' + displayData[currentShown].gene + '</td> \
+         <td>' + displayData[currentShown].SD + '</td> \
          </tr>'
       );
     }
   }
+}
+
+function insert_data() {
+  $.ajax({
+    url: "/insertdata",
+    method: "post",
+    success: function(rest) {
+      console.log("inserted data");
+      alert(res);
+    }
+  });
+}
+function delete_data() {
+  $.ajax({
+    url: "/deletedata",
+    method: "post",
+    success: function(rest) {
+      console.log("deleted data");
+      alert(res);
+    }
+  })
 }
