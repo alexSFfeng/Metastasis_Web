@@ -1,5 +1,6 @@
 var displayData;
 var currentShown;
+const geneShownLimit = 10;
 /* ------ search query : make ajax call to provide query conditions -------- */
 function sendQuery(e){
 
@@ -87,7 +88,8 @@ function generateTable(dataArr){
   if(dataArr.length == 0){
     alert("No results matched");
   }
-  for( currentShown = 0; currentShown < dataArr.length && currentShown < 2; currentShown ++){
+  for( currentShown = 0; currentShown < dataArr.length &&
+       currentShown < geneShownLimit; currentShown ++){
     $('#dataTable > tbody').append(
       '<tr> \
        <td><input type="checkbox" onclick="incChecked(this)" id=' + currentShown + '></input></td> \
@@ -104,7 +106,9 @@ function showMore(){
   if(displayData != undefined){
     console.log(currentShown);
 
-    for(; currentShown < oldShown+10 && currentShown < displayData.length; currentShown ++){
+    // show more 10 more data entries
+    for( ; currentShown < oldShown+geneShownLimit &&
+         currentShown < displayData.length; currentShown ++){
       $('#dataTable > tbody').append(
         '<tr> \
          <td><input type="checkbox" onclick="incChecked(this)" id=' + currentShown + '></input></td> \
