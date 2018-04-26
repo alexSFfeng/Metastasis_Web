@@ -37,10 +37,10 @@ function sendQuery(e){
   // Data array url building
   var dataArr = [];
 
-  if(gse_ID != undefined){dataArr.push("gse_id="+gse_ID);}
-  if(gender != undefined){dataArr.push("gender="+gender);}
-  if(race != undefined){dataArr.push("race="+race);}
-  if(cancer_type != undefined){dataArr.push("cancer_type="+cancer_type);}
+  if(gse_ID != undefined && gse_ID.length > 0){dataArr.push("gse_id="+gse_ID);}
+  if(gender != undefined && gender != -1){dataArr.push("gender="+gender);}
+  if(race != undefined && race.length > 0){dataArr.push("race="+race);}
+  if(cancer_type != undefined && cancer_type != 0){dataArr.push("cancer_type="+cancer_type);}
   if(age_start != undefined){dataArr.push("age_start="+age_start);}
   if(age_end != undefined){dataArr.push("age_end="+age_end);}
 
@@ -86,7 +86,6 @@ function generateTable(dataArr){
        currentShown < geneShownLimit; currentShown ++){
     $('#dataTable > tbody').append(
       '<tr> \
-
        <td><input type="checkbox" onclick="incChecked(this)" id=' + currentShown + '></input></td> \
        <td>' + dataArr[currentShown].gene + '</td> \
        <td>' + dataArr[currentShown].SD + '</td> \

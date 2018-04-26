@@ -111,24 +111,24 @@ app.post('/insertdata', function(req, res) {
     var db = client.db(userDB);
 
     db.collection("geneAnnotation").insertMany([
-      { "Array ID" : 1, "c Patient Age" : 1 },
-      { "Array ID" : 2, "c Patient Age" : 1 },
-      { "Array ID" : 3, "c Patient Age" : 1 },
-      { "Array ID" : 4, "c Patient Age" : 1 },
-      { "Array ID" : 5, "c Patient Age" : 2 },
-      { "Array ID" : 6, "c Patient Age" : 2 }
+      { "Array ID" : "1", "c Patient Age" : 1 },
+      { "Array ID" : "2", "c Patient Age" : 1 },
+      { "Array ID" : "3", "c Patient Age" : 1 },
+      { "Array ID" : "4", "c Patient Age" : 1 },
+      { "Array ID" : "5", "c Patient Age" : 2 },
+      { "Array ID" : "6", "c Patient Age" : 2 }
     ], function(err, res) {
       if (err) throw err;
       console.log("inserted annotation data");
     });
 
     db.collection("geneExpr").insertMany([
-      { "Probe ID" : 1, "gene1" : 0.1, "gene2" : 0.34, "gene3" : 0.342 },
-      { "Probe ID" : 2, "gene1" : 1.1, "gene2" : 2.34, "gene3" : 1.342 },
-      { "Probe ID" : 3, "gene1" : 2.1, "gene2" : 4.34, "gene3" : 5.342 },
-      { "Probe ID" : 4, "gene1" : 4.1, "gene2" : 7.34, "gene3" : 53.342 },
-      { "Probe ID" : 5, "gene1" : 8.1, "gene2" : 4.34, "gene3" : 10.342 },
-      { "Probe ID" : 6, "gene1" : 100.4, "gene2" : 0.1, "gene3" : 0.2 }
+      { "Probe ID" : "1", "gene1" : 0.1, "gene2" : 0.34, "gene3" : 0.342 },
+      { "Probe ID" : "2", "gene1" : 1.1, "gene2" : 2.34, "gene3" : 1.342 },
+      { "Probe ID" : "3", "gene1" : 2.1, "gene2" : 4.34, "gene3" : 5.342 },
+      { "Probe ID" : "4", "gene1" : 4.1, "gene2" : 7.34, "gene3" : 53.342 },
+      { "Probe ID" : "5", "gene1" : 8.1, "gene2" : 4.34, "gene3" : 10.342 },
+      { "Probe ID" : "6", "gene1" : 100.4, "gene2" : 0.1, "gene3" : 0.2 }
     ], function(err, res) {
       if (err) throw err;
       console.log("inserted expression data");
@@ -150,10 +150,10 @@ app.get('/search',function(req,res){
 
     // building query
     var q = {};
-    if (req.query.length > 0) {
+    if (Object.keys(req.query).length > 0) {
       q["$and"] = [];
       if (target_id != undefined) {
-        q["$and"].push({"Array ID" : target_id});
+        q["$and"].push({"c GSE ID" : target_id});
       }
       if (target_age_start != undefined) {
         q["$and"].push({"c Patient Age" : {$gte : Number(target_age_start)}});
@@ -190,9 +190,9 @@ app.get('/search',function(req,res){
         console.log(ids);
         db.collection("geneExpr").find(ids).toArray(function(err_2, result_2) {
           if (err_2) throw err_2;
-          var objlength = result_2.length;
+          var objlength = result_2.length; // ids
           var keys = Object.keys(result_2[0]);
-          var keylength = keys.length;
+          var keylength = keys.length; // genes
           //console.log(result_2);
 
           var sdarr = [];
@@ -202,6 +202,7 @@ app.get('/search',function(req,res){
               avg = avg + result_2[j][keys[i]];
             }
             avg = avg / objlength;
+            // calculate standard deviation
             var sumsq = 0;
             for(var k = 0; k < objlength; k++) {
               sumsq = sumsq + Math.pow(result_2[k][keys[i]] - avg, 2);
