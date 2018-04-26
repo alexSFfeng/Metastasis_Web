@@ -23,16 +23,17 @@ function incChecked (event){
   }
 }
 
-function generateGraph(){
-  popup.style.display="block";
-}
-
 /* popup modal box reaction */
 var popup;
 
 // read the element on load
 window.onload = function(){
   popup = document.getElementById("modal");
+}
+
+// generating the graph
+function generateGraph(){
+  popup.style.display="block";
 }
 
 // close the pop up login modal box
