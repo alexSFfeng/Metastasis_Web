@@ -94,16 +94,133 @@ app.post('/login', function(req, res) {
 app.get('/DataSearchPage',function(req,res){
   res.sendFile( __dirname + "/DataSearchPage.html");
 })
+app.post('/deletedata', function(req, res) {
+  MongoClient.connect(url, function(err, client) {
+    if (err) throw err;
+    var db = client.db(userDB);
+    db.collection("geneAnnotation").deleteMany(function(err, res) {
+      if (err) throw err;
+      console.log("deleted all")
+    })
+  })
+})
+app.post('/insertdata', function(req, res) {
+  MongoClient.connect(url, function(err, client) {
+    if (err) throw err;
+    console.log("inserting test data");
+    var db = client.db(userDB);
 
+    db.collection("geneAnnotation").insertMany([
+      { "Array ID" : "1", "c Patient Age" : 1 },
+      { "Array ID" : "2", "c Patient Age" : 1 },
+      { "Array ID" : "3", "c Patient Age" : 1 },
+      { "Array ID" : "4", "c Patient Age" : 1 },
+      { "Array ID" : "5", "c Patient Age" : 2 },
+      { "Array ID" : "6", "c Patient Age" : 2 }
+    ], function(err, res) {
+      if (err) throw err;
+      console.log("inserted annotation data");
+    });
+
+    db.collection("geneExpr").insertMany([
+      { "Probe ID" : "1", "gene1" : 0.1, "gene2" : 0.34, "gene3" : 0.342 },
+      { "Probe ID" : "2", "gene1" : 1.1, "gene2" : 2.34, "gene3" : 1.342 },
+      { "Probe ID" : "3", "gene1" : 2.1, "gene2" : 4.34, "gene3" : 5.342 },
+      { "Probe ID" : "4", "gene1" : 4.1, "gene2" : 7.34, "gene3" : 53.342 },
+      { "Probe ID" : "5", "gene1" : 8.1, "gene2" : 4.34, "gene3" : 10.342 },
+      { "Probe ID" : "6", "gene1" : 100.4, "gene2" : 0.1, "gene3" : 0.2 }
+    ], function(err, res) {
+      if (err) throw err;
+      console.log("inserted expression data");
+    });
+  });
+})
 
 app.get('/search',function(req,res){
-  console.log("got in");
-  var dummyData = [ {name:"Person 1", age: 30},
-                    {name:"Person 2", age: 25},
-                    {name:"Person 3", age: 55}];
+  var target_id = req.query.gse_id;
+  var target_age_start = req.query.age_start;
+  var target_age_end = req.query.age_end;
+  var target_gender = req.query.gender;
+  var target_race = req.query.race;
+  var target_cancer = req.query.cancer_type;
+  console.log("query: " + target_id + ", " + target_age_start + ", " + target_age_end + ", " + target_gender + ", " + target_race + ", " + target_gender)
+  MongoClient.connect(url, function(err, client) {
+    if (err) throw err;
+    var db = client.db(userDB);
 
+    // building query
+    var q = {};
+    if (Object.keys(req.query).length > 0) {
+      q["$and"] = [];
+      if (target_id != undefined) {
+        q["$and"].push({"c GSE ID" : target_id});
+      }
+      if (target_age_start != undefined) {
+        q["$and"].push({"c Patient Age" : {$gte : Number(target_age_start)}});
+      }
+      if (target_age_end != undefined) {
+        q["$and"].push({"c Patient Age" : {$lte : Number(target_age_end)}});
+      }
+      if(target_gender != undefined) {
+        q["$and"].push({"c Patient Sex" : target_gender});
+      }
+      if (target_race != undefined) {
+        q["$and"].push({"c Patient Race" : target_race});
+      }
+      if (target_cancer != undefined) {
+        q["$and"].push({"c Cancer Type" : target_cancer})
+      }
+    }
+    console.log(q);
 
-  res.send(dummyData);
+    db.collection("geneAnnotation").find(q).toArray(function(err, result) {
+      if (err) throw err;
+      if (result.length > 0) {
+        console.log("valid query: " + result.length);
+        var ids = {};
+        ids["$or"] = [];
+        for (var n = 0; n < result.length; n++) {
+          ids["$or"].push({"Probe ID" : result[n]["Array ID"]});
+        }
+        console.log("query successfully returned: ");
+        console.log(result);
+
+        // using gsm ids to search other database
+        console.log("gathering expression table data, ids to find:");
+        console.log(ids);
+        db.collection("geneExpr").find(ids).toArray(function(err_2, result_2) {
+          if (err_2) throw err_2;
+          var objlength = result_2.length; // ids
+          var keys = Object.keys(result_2[0]);
+          var keylength = keys.length; // genes
+          //console.log(result_2);
+
+          var sdarr = [];
+          for(var i = 2; i < keylength; i++) {
+            var avg = 0;
+            for(var j = 0; j < objlength; j++) {
+              avg = avg + result_2[j][keys[i]];
+            }
+            avg = avg / objlength;
+            // calculate standard deviation
+            var sumsq = 0;
+            for(var k = 0; k < objlength; k++) {
+              sumsq = sumsq + Math.pow(result_2[k][keys[i]] - avg, 2);
+            }
+            var sd = 1 / objlength * Math.sqrt(sumsq);
+            sdarr.push({gene: keys[i], SD: sd});
+          }
+          sdarr.sort(function(a, b) {
+              return b.SD - a.SD;
+          });
+          console.log(sdarr);
+          res.send(sdarr);
+        });
+      } else {
+        console.log("invalid, zero entries matched.");
+      }
+    });
+  });
 })
 
 // testing query filters
