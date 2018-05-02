@@ -93,48 +93,7 @@ app.post('/login', function(req, res) {
 /*-------------------- SEARCH PAGE REDIRECT --------------------------- */
 app.get('/DataSearchPage',function(req,res){
   res.sendFile( __dirname + "/DataSearchPage.html");
-})
-app.post('/deletedata', function(req, res) {
-  MongoClient.connect(url, function(err, client) {
-    if (err) throw err;
-    var db = client.db(userDB);
-    db.collection("geneAnnotation").deleteMany(function(err, res) {
-      if (err) throw err;
-      console.log("deleted all")
-    })
-  })
-})
-app.post('/insertdata', function(req, res) {
-  MongoClient.connect(url, function(err, client) {
-    if (err) throw err;
-    console.log("inserting test data");
-    var db = client.db(userDB);
-
-    db.collection("geneAnnotation").insertMany([
-      { "Array ID" : "1", "c Patient Age" : 1 },
-      { "Array ID" : "2", "c Patient Age" : 1 },
-      { "Array ID" : "3", "c Patient Age" : 1 },
-      { "Array ID" : "4", "c Patient Age" : 1 },
-      { "Array ID" : "5", "c Patient Age" : 2 },
-      { "Array ID" : "6", "c Patient Age" : 2 }
-    ], function(err, res) {
-      if (err) throw err;
-      console.log("inserted annotation data");
-    });
-
-    db.collection("geneExpr").insertMany([
-      { "Probe ID" : "1", "gene1" : 0.1, "gene2" : 0.34, "gene3" : 0.342 },
-      { "Probe ID" : "2", "gene1" : 1.1, "gene2" : 2.34, "gene3" : 1.342 },
-      { "Probe ID" : "3", "gene1" : 2.1, "gene2" : 4.34, "gene3" : 5.342 },
-      { "Probe ID" : "4", "gene1" : 4.1, "gene2" : 7.34, "gene3" : 53.342 },
-      { "Probe ID" : "5", "gene1" : 8.1, "gene2" : 4.34, "gene3" : 10.342 },
-      { "Probe ID" : "6", "gene1" : 100.4, "gene2" : 0.1, "gene3" : 0.2 }
-    ], function(err, res) {
-      if (err) throw err;
-      console.log("inserted expression data");
-    });
-  });
-})
+});
 
 app.get('/search',function(req,res){
   var target_id = req.query.gse_id;
@@ -143,10 +102,10 @@ app.get('/search',function(req,res){
   var target_gender = req.query.gender;
   var target_race = req.query.race;
   var target_cancer = req.query.cancer_type;
-  console.log("query: " + target_id + ", " + target_age_start + ", " + target_age_end + ", " + target_gender + ", " + target_race + ", " + target_gender)
+  console.log("query: " + target_id + ", " + target_age_start + ", " + target_age_end + ", " + target_gender + ", " + target_race + ", " + target_cancer);
   MongoClient.connect(url, function(err, client) {
     if (err) throw err;
-    var db = client.db(userDB);
+    var db = client.db("CancerData");
 
     // building query
     var q = {};
