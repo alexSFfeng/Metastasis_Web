@@ -177,10 +177,10 @@ app.get('/search',function(req,res){
   var target_gender = req.query.gender;
   var target_race = req.query.race;
   var target_cancer = req.query.cancer_type;
-  console.log("query: " + target_id + ", " + target_age_start + ", " + target_age_end + ", " + target_gender + ", " + target_race + ", " + target_gender)
+  console.log("query: " + target_id + ", " + target_age_start + ", " + target_age_end + ", " + target_gender + ", " + target_race + ", " + target_cancer);
   MongoClient.connect(url, function(err, client) {
     if (err) throw err;
-    var db = client.db(userDB);
+    var db = client.db("CancerData");
 
     // building query
     var q = {};

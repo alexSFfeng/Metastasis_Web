@@ -240,7 +240,7 @@ thead, tfoot {
 }
 
 #graphBttn {
-  display: none;
+  /*display: none;*/
 }
 
 /*-------------Graph Popup Page ---------------------*/
@@ -277,4 +277,20 @@ thead, tfoot {
 .graphDescription {
   margin-left: 1.2em;
   font-size: 1.5em;
+}
+
+svg{
+    display: block;
+    margin: auto;
+    margin-bottom: 20px;
+}
+
+.dot {
+  stroke: #000;
+}
+
+.axis {
+  fill: none;
+  stroke: black;
+  shape-rendering: crispEdges;
 }
