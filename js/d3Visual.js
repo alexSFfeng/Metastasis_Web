@@ -36,46 +36,58 @@ window.onload = function(){
   popup = document.getElementById("modal");
 }
 
+/*
 function requestForGraphData(geneA,geneB){
-  $.ajax({
-    url : [enter dbconnect target here],
-    method : "post",
-    data : {
-      targetGenes : [geneA, geneB]
-    }
-    success : function(res){
-      generateGraph(res);
-      alert("graph generated");
-    },
-    error : function(res){
-      alert("failed to generate graph");
-    }
-  });
+$.ajax({
+url : [enter dbconnect target here],
+method : "post",
+data : {
+targetGenes : [geneA, geneB]
 }
+success : function(res){
+generateGraph(res);
+alert("graph generated");
+},
+error : function(res){
+alert("failed to generate graph");
+}
+});
+}
+*/
 
 // generating the graph
-function generateGraph(){
+function generateGraph(dataArr){
 
   // graph traits
   var data = [ {geneA: 10, geneB: 23},
     {geneA: 50, geneB: 9},
     {geneA: 14, geneB: 33},
     {geneA: 12, geneB: 24},
-    {geneA: 28, geneB: 5} ];
-    var height = 650;
-    var width = 800;
+    {geneA: 28, geneB: 5},
+    {geneA: 23, geneB: 12},
+    {geneA: 40, geneB: 16},
+    {geneA: 30, geneB: 20} ];
+    var height = 600;
+    var width = 600;
+
+    for(var i = 0; i < 100000; i++){
+      var aValue = Math.floor(Math.random() * 30)+8;
+      var bValue = Math.floor(Math.random() * 20)+20;
+      var dataPt = {geneA : aValue, geneB : bValue};
+      data.push(dataPt);
+    }
 
     // setup x
-    var xValue = function(d) { return d.geneB;}, // data -> value
+    var xValue = function(d) { return d.geneA;}, // data -> value
     xScale = d3.scaleLinear().domain([0,MAX_EXPR_VALUE])
-             .range([0, width-X_OFFSET]), // value -> display
+    .range([0, width-X_OFFSET]), // value -> display
     xMap = function(d) { return xScale(xValue(d));}, // data -> display
     xAxis = d3.axisBottom(xScale).ticks(10);
 
     // setup y
-    var yValue = function(d) { return d.geneA;}, // data -> value
+    var yValue = function(d) { return d.geneB;}, // data -> value
     yScale = d3.scaleLinear().domain([0,MAX_EXPR_VALUE])
-             .range([height-Y_OFFSET, Y_OFFSET_TOP]), // value -> display
+    .range([height-Y_OFFSET, Y_OFFSET_TOP]), // value -> display
     yMap = function(d) { return yScale(yValue(d));}, // data -> display
     yAxis = d3.axisLeft(yScale).ticks(10);
 
@@ -92,20 +104,31 @@ function generateGraph(){
     .attr("transform", "translate(0," + (height-Y_OFFSET) + ")")
     .call(xAxis);
 
+    // x label
     canvas.append("text")
-    .attr("transform", "translate(" + ((width-X_OFFSET)/2) + " ,"+(height+Y_OFFSET) +")")
+    .attr("transform", "translate(" + ((width-200)/2) + " ,"+(height+Y_OFFSET) +")")
     .attr("class", "x label")
-    .style("text-anchor", "middle")
-    .text("Gene A");
+    .style("text-align", "center")
+    .text("Gene A Expr Lv");
 
     // y-axis
     canvas.append("g")
     .attr("class", "axis")
-    .call(yAxis)
-    .append("text")
-    .attr("transform", "rotate(-90)")
-    .style("text-anchor", "center")
-    .text("Gene B");
+    .call(yAxis);
+
+
+    var transformStr = "translate(" + -30 + "," + (height+150)/2 +")"
+    + "rotate(" + -90 + ")";
+    // y label
+    canvas.append("text")
+    .attr("transform",transformStr)
+    .style("text-align", "center")
+    .text("Gene B Expr Lv");
+
+    // add data points
+    canvas.selectAll(".dot").data(data).enter().append("circle")
+    .attr("class","dot").attr("r",2.5).attr("cx",xMap)
+    .attr("cy",yMap);
 
     popup.style.display="block";
   }
