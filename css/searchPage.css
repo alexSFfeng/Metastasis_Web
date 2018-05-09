@@ -49,8 +49,7 @@ body {
 
   /* Set a specific height */
   min-height: 400px;
-
-  background-image: url("../images/databasePanel.jpg");
+  background-image: url("../images/databasePanel2.jpg");
 
 
   /* Create the parallax scrolling effect */
@@ -240,7 +239,7 @@ thead, tfoot {
 }
 
 #graphBttn {
-  /*display: none;*/
+  display: none;
 }
 
 /*-------------Graph Popup Page ---------------------*/

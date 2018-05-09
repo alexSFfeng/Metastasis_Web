@@ -1,5 +1,11 @@
+/* data holding structures*/
 var displayData;
 var currentShown;
+
+/* gene selection */
+var boxesChecked = 0;
+var selectedGenes = [];
+
 const geneShownLimit = 10;
 /* ------ search query : make ajax call to provide query conditions -------- */
 function sendQuery(e){
@@ -56,14 +62,14 @@ function sendQuery(e){
     }
   }
   console.log(targetURL);
-
   /*--------------------------AGE RANGE CHECK ---------------------------*/
   $.ajax({
-    url: targetURL,
+    url: 'testSearch',
     method : "get",
     success : function(res){
       displayData = res;
       generateTable(displayData);
+      hideGraphButton();
       alert("table generated");
     },
     error : function(res){
@@ -71,6 +77,44 @@ function sendQuery(e){
     }
   });
 
+}
+
+// increment the number of checkboxes checked
+function incChecked (event){
+
+  // get selected row data
+  var geneID = 'gene'+event.id;
+  var geneName = $('#'+geneID).text();
+
+  // keep track of the data rows checked
+  if(event.checked){
+    boxesChecked ++;
+    selectedGenes.push(geneName);
+  }
+  else{
+    boxesChecked --;
+    var index = selectedGenes.indexOf(geneName);
+    if(index >= 0){
+      selectedGenes.splice(index,1);
+    }
+  }
+  //console.log(selectedGenes);
+
+  /* only allow selecting two data rows at a time and only display then
+  generate graph button if two rows are selected */
+  if(boxesChecked == 2){
+    $("input[type='checkbox']:not(:checked)").attr('disabled', true)
+    d3.select("#graphBttn").style("display","table-row");
+  }
+  else{
+    $("input[type='checkbox']").attr('disabled',false);
+    d3.select("#graphBttn").style("display","none");
+  }
+}
+
+function hideGraphButton(){
+  boxesChecked = 0;
+  d3.select("#graphBttn").style("display","none");
 }
 
 // generate the first table.
@@ -86,8 +130,8 @@ function generateTable(dataArr){
        currentShown < geneShownLimit; currentShown ++){
     $('#dataTable > tbody').append(
       '<tr> \
-       <td><input type="checkbox" onclick="incChecked(this)" id=' + currentShown + '></input></td> \
-       <td>' + dataArr[currentShown].gene + '</td> \
+       <td><input type="checkbox" onclick="incChecked(this)" id=' + currentShown +'></input></td> \
+       <td id=gene'+ currentShown + ' >' + dataArr[currentShown].gene + '</td> \
        <td>' + dataArr[currentShown].SD + '</td> \
        </tr>'
     );
@@ -106,7 +150,7 @@ function showMore(){
       $('#dataTable > tbody').append(
         '<tr> \
          <td><input type="checkbox" onclick="incChecked(this)" id=' + currentShown + '></input></td> \
-         <td>' + displayData[currentShown].gene + '</td> \
+         <td id=gene'+ currentShown + ' >' + displayData[currentShown].gene + '</td> \
          <td>' + displayData[currentShown].SD + '</td> \
          </tr>'
       );
