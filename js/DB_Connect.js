@@ -9,7 +9,7 @@ const userDB = "UserInfo";
 
 // get new express instance
 var app = express();
-var prev_ids = undefined;
+var prev_ids;
 
 // change default page to be LoginPage.html
 app.use(express.static(path.join(__dirname,"../"), {index:'LoginPage.html'}));
@@ -126,10 +126,10 @@ app.post('/insertdata', function(req, res) {
     });
 
     db.collection("geneExpr").insertMany([
-      { "gene" : "gene1", "1" : 0.1, "2" : 0.34, "3" : 0.342, "4" : 1.45 },
-      { "gene" : "gene2", "1" : 1.1, "2" : 2.34, "3" : 1.342, "4" : 3.4534 },
-      { "gene" : "gene3", "1" : 2.1, "2" : 4.34, "3" : 5.342, "4" : 3.25 },
-      { "gene" : "gene4", "1" : 4.1, "2" : 7.34, "3" : 53.342, "4" : 0.542 }
+      { "Probe ID" : "gene1", "1" : 0.1, "2" : 0.34, "3" : 0.342, "4" : 1.45 },
+      { "Probe ID" : "gene2", "1" : 1.1, "2" : 2.34, "3" : 1.342, "4" : 3.4534 },
+      { "Probe ID" : "gene3", "1" : 2.1, "2" : 4.34, "3" : 5.342, "4" : 3.25 },
+      { "Probe ID" : "gene4", "1" : 4.1, "2" : 7.34, "3" : 53.342, "4" : 0.542 }
     ], function(err, res) {
       if (err) throw err;
       console.log("inserted expression data");
@@ -139,28 +139,35 @@ app.post('/insertdata', function(req, res) {
 
 //generate graph
 app.get("/graph", function(req, res) {
-  var xgene = req.query.x;
-  var ygene = req.query.y;
+  var xgene = req.query.geneA;
+  var ygene = req.query.geneB;
+  xgene = "gene4";
+  ygene = "gene3";
+  console.log("generating plot points...");
   console.log("xgene: " + xgene + ", ygene: " + ygene);
+  console.log("prev ids: " + prev_ids);
   MongoClient.connect(url, function(err, client) {
     if (err) throw err;
     var db = client.db(userDB);
 
-    if (prev_ids != undefined) {
+    if (1) {
+    //if (prev_ids.length > 0) {
       // only get selected genes
       var q = {}
       q["$or"] = [];
-      q["$or"].push({"gene" : xgene});
-      q["$or"].push({"gene" : ygene});
+      q["$or"].push({"Probe ID" : xgene});
+      q["$or"].push({"Probe ID" : ygene});
       console.log(q);
 
       db.collection("geneExpr").find(q).toArray(function(err, genes) {
         if (err) throw err;
         var points = [];
+        //var keys = Object.keys(genes[0]);
 
         for (var i = 0; i < prev_ids.length; i++) {
-          points.push([genes[0][prev_ids[i]], genes[0][prev_ids[i]]]);
+          points.push({"geneA" : genes[0][prev_ids[i]["Array ID"]], "geneB" : genes[1][prev_ids[i]["Array ID"]]});
         }
+        console.log("points:")
         console.log(points);
         res.send(points);
       })
@@ -180,7 +187,7 @@ app.get('/search',function(req,res){
   console.log("query: " + target_id + ", " + target_age_start + ", " + target_age_end + ", " + target_gender + ", " + target_race + ", " + target_cancer);
   MongoClient.connect(url, function(err, client) {
     if (err) throw err;
-    var db = client.db("CancerData");
+    var db = client.db(userDB);
 
     // building query
     var q = {};
@@ -207,49 +214,47 @@ app.get('/search',function(req,res){
     }
     console.log(q);
 
-    prev_ids = undefined;
+    prev_ids = [];
     db.collection("geneAnnotation").find(q).toArray(function(err, result) {
       if (err) throw err;
       if (result.length > 0) {
         console.log("valid query: " + result.length);
-        var ids = [];
-        for (var n = 0; n < result.length; n++) {
-          ids.push(result[n]["Array ID"]);
-        }
-        console.log("query successfully returned: ");
         console.log(result);
 
         // using gsm ids to search other database
-        console.log("gathering expression table data, ids to find:");
-        console.log(ids);
+        console.log("gathering expression table data:");
         db.collection("geneExpr").find().toArray(function(err_2, genes) {
           if (err_2) throw err_2;
-          prev_ids = ids;
-          //var id_vals = Object.keys(result_2[0]);
+          prev_ids = result;
+          console.log("prev ids:")
+          console.log(prev_ids);
+          //this.prev_ids = result;
           var sdarr = [];
           console.log("finding sd");
           for (var i = 0; i < genes.length; i++) { // loop through each gene
             var avg = 0;
-            for (var j = 0; j < ids.length; j++) { // loop through each relevant id in the gene
-              avg += genes[i][ids[j]];
+            for (var j = 0; j < result.length; j++) { // loop through each relevant id in the gene
+              avg += genes[i][result[j]["Array ID"]];
             }
-            avg /= ids.length;
+            avg /= result.length;
             // calculate standard deviation
             var sumsq = 0;
-            for(var k = 0; k < ids.length; k++) {
-              sumsq = sumsq + Math.pow(genes[i][ids[k]] - avg, 2);
+            for(var k = 0; k < result.length; k++) {
+              sumsq = sumsq + Math.pow(genes[i][result[k]["Array ID"]] - avg, 2);
             }
-            var sd = 1 / ids.length * Math.sqrt(sumsq);
-            sdarr.push({gene: genes[i]["gene"], SD: sd});
+            var sd = 1 / result.length * Math.sqrt(sumsq);
+            sdarr.push({gene: genes[i]["Probe ID"], SD: sd});
           }
           sdarr.sort(function(a, b) {
               return b.SD - a.SD;
           });
+          //sdarr = [{gene: "gene1", SD: 1}, {gene: "gene2", SD: 2}]
           console.log(sdarr);
           res.send(sdarr);
         });
       } else {
         console.log("invalid, zero entries matched.");
+        throw err;
       }
     });
   });

@@ -38,11 +38,8 @@ window.onload = function(){
 
 function requestForGraphData(geneA,geneB){
   $.ajax({
-    url : [enter dbconnect target here],
-    method : "post",
-    data : {
-      targetGenes : [geneA, geneB]
-    }
+    url : "/graph?geneA=" + geneA + "&geneB=" + geneB,
+    method : "get",
     success : function(res){
       generateGraph(res);
       alert("graph generated");
@@ -54,16 +51,20 @@ function requestForGraphData(geneA,geneB){
 }
 
 // generating the graph
-function generateGraph(){
+function generateGraph(res){
 
   // graph traits
-  var data = [ {geneA: 10, geneB: 23},
+  var data = res; /*[ {geneA: 10, geneB: 23},
     {geneA: 50, geneB: 9},
     {geneA: 14, geneB: 33},
     {geneA: 12, geneB: 24},
-    {geneA: 28, geneB: 5} ];
+    {geneA: 28, geneB: 5} ];*/
     var height = 650;
     var width = 800;
+    console.log("points:")
+    for (var i = 0; i < data.length; i++) {
+      console.log(data.geneA + ", " + data.geneB);
+    }
 
     // setup x
     var xValue = function(d) { return d.geneB;}, // data -> value
