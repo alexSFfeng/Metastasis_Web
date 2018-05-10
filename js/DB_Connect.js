@@ -177,6 +177,25 @@ app.get("/graph", function(req, res) {
   });
 })
 
+app.get('/testSearch',function(req,res){
+  var dummy = [
+    {
+      gene: 10, SD:19
+    },
+    {
+      gene: 11, SD:19
+    },
+    {
+      gene: 12, SD:19
+    },
+    {
+      gene: 13, SD:19
+    }
+  ];
+
+  res.send(dummy);
+})
+
 app.get('/search',function(req,res){
   var target_id = req.query.gse_id;
   var target_age_start = req.query.age_start;
@@ -260,53 +279,6 @@ app.get('/search',function(req,res){
   });
 })
 
-// testing query filters
-app.get('/find',function(req,res){
-  res.write("<h1 style='text-align:center;'>This is data in \"" + userDB + "\"  \
-            collection</h1>");
-
-  // connect to testing database
-  MongoClient.connect(url, function(err,client){
-    if(err){
-      console.log("unable to connect");
-      throw err;
-    }
-
-    // open up the user database
-    var db = client.db(userDB);
-    console.log("Begin querying existing data in test db");
-
-    /*
-     * !!!!!! PUT YOUR TEST FILTER CONDITION IN THE find bracket {} !!!!!!!
-     */
-    db.collection("Test").find({Name: "Baby"}).toArray(function(err, result) {
-      if (err) throw err;
-      if(result.length > 0){
-        // loop through the results found
-        for(var i = 0; i < result.length; i++){
-
-          // store the keys of each object found
-          var keys = Object.keys(result[i]);
-
-          // display each key and value to the browser
-          for(var j = 1; j < keys.length; j ++){
-            res.write("<p style='text-align:center'>");
-            res.write("" + keys[j] + " : " + result[i][keys[j]]);
-            res.write("<br></p>");
-          }
-          res.write("<hr>");
-        }
-      }
-      // nothing found
-      else{
-        res.write("No data found");
-      }
-      res.end();
-    });
-
-    client.close();
-  });
-});
 
 // listening to port
 app.listen(config.port,function(){
