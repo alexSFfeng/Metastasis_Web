@@ -1,4 +1,6 @@
 geneA <- c(1,3,5,7,2,5,7,9,12,23,17,24,19)
 geneB <- c(2,4,6,8,12,15,16,19,23,25,4,7,20)
 head(cbind(geneA, geneB))
+dev.copy(png, '~/Desktop/plot.png')
 plot(geneA, geneB, xlab="Gene A expression value", ylab="Gene B expression value")
+dev.off()
