@@ -1,13 +1,13 @@
-function generateR(arrayA, arrayB, imageName) {
-  var rFile = "graph.R";
+function generateR(geneA, geneB, arrayA, arrayB, fileName) {
+  var rFile = fileName + '.R';
   var file = new File(rFile);
-  var array1 = arrayA;
-  var array2 = arrayB;
+  var xaxis = geneA + "expression value";
+  var yaxis = geneB + "expression value";
   
   file.open("w"); //open file with write access
-  file.writeln("head(cbind(" + array1 + ", " + arrayB + "))");
-  file.writeln("dev.copy(png, 'scatterplot.png')");
-  file.writeln("plot(" + array1 + ", " + array2 + ", xlab="Gene A expression value", ylab="Gene B expression value")");
+  file.writeln("head(cbind(" + arrayA + ", " + arrayB + "))");
+  file.writeln("dev.copy(png, " + imageName + ")");
+  file.writeln("plot(" + arrayA + ", " + arrayB + ", xlab=" + xaxis + ", ylab=" + yaxis + ")");
   file.writeln("dev.off()");
   file.close();
   
