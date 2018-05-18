@@ -1,8 +1,10 @@
 function generateR(geneA, geneB, arrayA, arrayB, fileName) {
   var rFile = fileName + '.R';
+  var imageName = fileName + '.png';
   var file = new File(rFile);
   var xaxis = geneA + "expression value";
   var yaxis = geneB + "expression value";
+  
   
   file.open("w"); //open file with write access
   file.writeln("head(cbind(" + arrayA + ", " + arrayB + "))");
