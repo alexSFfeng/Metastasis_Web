@@ -64,7 +64,7 @@ function sendQuery(e){
   console.log(targetURL);
   /*--------------------------AGE RANGE CHECK ---------------------------*/
   $.ajax({
-    url: 'testSearch',
+    url: targetURL,
     method : "get",
     success : function(res){
       displayData = res;
