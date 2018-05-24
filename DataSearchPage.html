@@ -33,7 +33,7 @@
 
   <!-- ID search box -->
   <div id="searchBox">
-    <input id="searchID" placeholder="Search By GSE_ID (experiment set id)" type="text"></input>
+    <input id="searchID" placeholder="Search genes; separate each gene by comma" type="text"></input>
     <input class="submitBttn" id="queryBttn" type="button" value="SEARCH" onclick="sendQuery()">
   </div>
 
@@ -124,7 +124,7 @@
         </tr>
         <tr id="graphBttn">
             <td colspan="3">
-                <button type="button" onclick="generateGraph()">GENERATE GRAPH</button>
+                <button type="button" onclick="requestForPlot()">GENERATE GRAPH</button>
             </td>
         </tr>
         <tr>
