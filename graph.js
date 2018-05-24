@@ -14,7 +14,7 @@ function generateR(geneA, geneB, arrayA, arrayB, fileName) {
   file.close();
   
   //child.process
-  var execFile = require('child_process').execFile;
+  var { execFile } = require('child_process').execFile;
   var child = execFile('R', ['graph.R'], (error, stdout, stderr) {
     if(error) {
       throw error;
