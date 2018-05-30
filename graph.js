@@ -8,7 +8,7 @@ function generateR(geneA, geneB, arrayA, arrayB, fileName) {
   
   file.open("w"); //open file with write access
   file.writeln("head(cbind(" + arrayA + ", " + arrayB + "))");
-  file.writeln("dev.copy(png, " + imageName + ")");
+  file.writeln("png(" + imageName + ")");
   file.writeln("plot(" + arrayA + ", " + arrayB + ", xlab=" + xaxis + ", ylab=" + yaxis + ")");
   file.writeln("dev.off()");
   file.close();
