@@ -11,7 +11,7 @@ window.onload = function(){
 }
 
 
-function requestForGraphData(geneA,geneB){
+function requestForGraphData(){
   $.ajax({
     url : "/graph?geneA=" + selectedGenes[0] + "&geneB=" + selectedGenes[1],
     method : "get",
@@ -30,23 +30,7 @@ function requestForGraphData(geneA,geneB){
 function generateGraph(dataArr){
 
   // graph traits
-  var data = [];
-  var height = 600;
-  var width = 650;
-
-  for(var i = 0; i < 80; i++){
-    var aValue = Math.floor(Math.random() * 20)+5;
-    var bValue = Math.floor(Math.random() * 35)+8;
-    var dataPt = {geneA : aValue, geneB : bValue};
-    data.push(dataPt);
-  }
-
-  for(var i = 0; i < 80; i++){
-    var aValue = Math.floor(Math.random() * 35)+8;
-    var bValue = Math.floor(Math.random() * 20)+5;
-    var dataPt = {geneA : aValue, geneB : bValue};
-    data.push(dataPt);
-  }
+  var data = dataArr;
 
   // setup x
   var xValue = function(d) { return d.geneA;}, // data -> value

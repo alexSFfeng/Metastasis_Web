@@ -32,8 +32,10 @@
   <div class="parallax"> </div>
 
   <!-- ID search box -->
-  <div id="searchBox">
-    <input id="searchID" placeholder="Search By GSE_ID (experiment set id)" type="text"></input>
+<div id="searchBox">
+  <p id="searchDesc">Enter genes to search for, comma separated. For example, to search for genes AFFX-BioB-5_at and 200606_at, please enter "AFFX-BioB-5_at,200606_at".<br>
+      Some genes you may wish to search for include 201316_at, 219475_at, 228962_at, 233035_at, 243917_at, 1556469_s_at, 1561576_a_at, 1570653_at, and more.</p>
+  <input id="searchID" placeholder="Enter genes to search for..." type="text" required></input>
     <input class="submitBttn" id="queryBttn" type="button" value="SEARCH" onclick="sendQuery()">
   </div>
 
@@ -151,10 +153,10 @@
     </div>
   </div>
 
-  <div class="testdata">
+  <!--<div class="testdata">
     <input type="submit" id="insdata" onclick="insert_data()" value="insert test data"></input><br>
     <input type="submit" id="deldata" onclick="delete_data()" value="delete test data"></input><br>
-  </div>
+  </div>-->
 
   <script src="./js/searchVue.js"></script>
 

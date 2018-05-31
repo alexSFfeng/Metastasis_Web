@@ -6,24 +6,29 @@ var currentShown;
 var boxesChecked = 0;
 var selectedGenes = [];
 
-const geneShownLimit = 10;
+const geneShownLimit = 5;
 /* ------ search query : make ajax call to provide query conditions -------- */
 function sendQuery(e){
 
   // info grabbing
-  var gse_ID = $('#searchID').val().trim();
+  var genestr = $('#searchID').val().trim();
   var gender = $('#gender').val();
   var race = $('#race').val();
   var cancer_type = $('#cancer_type').val();
   var age_start = $('#Age_Start').val();
   var age_end = $('#Age_End').val();
 
-  console.log("gse_id = " + gse_ID);
+  console.log("genes = " + genestr);
   console.log("gender = " + gender);
   console.log("race = " + race);
   console.log("cancer_type = " + cancer_type);
   console.log("age_start = " + age_start);
   console.log("age_end = " + age_end);
+
+  if (genestr == "") {
+    alert("Please enter the genes you wish to search.");
+    return;
+  }
 
   /*--------------------------AGE RANGE CHECK ---------------------------*/
   if(age_start < 0 || age_end < 0){
@@ -43,7 +48,7 @@ function sendQuery(e){
   // Data array url building
   var dataArr = [];
 
-  if(gse_ID != undefined && gse_ID.length > 0){dataArr.push("gse_id="+gse_ID);}
+  if(genestr != undefined && genestr.length > 0){dataArr.push("genestr="+genestr);}
   if(gender != undefined && gender != -1){dataArr.push("gender="+gender);}
   if(race != undefined && race.length > 0){dataArr.push("race="+race);}
   if(cancer_type != undefined && cancer_type != 0){dataArr.push("cancer_type="+cancer_type);}

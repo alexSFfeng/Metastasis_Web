@@ -80,6 +80,14 @@ body {
   padding: 5px;
 }
 
+#searchDesc {
+  width: 100%;
+  font-size: 15px;
+  vertical-align: middle;
+  padding: 5px;
+  padding-left: 20px;
+}
+
 #queryBttn {
   font-size: 26px;
   width:15%;
