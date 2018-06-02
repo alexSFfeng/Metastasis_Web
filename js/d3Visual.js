@@ -22,7 +22,6 @@ function requestForPlot(){
   img.setAttribute("width", "650");
   img.src = "/generatePlot?geneA=" + geneA + "&geneB=" + geneB;
   graphBox.appendChild(img);
-
   popup.style.display="block";
 
 
@@ -70,16 +69,30 @@ function generateGraph(){
   var height = 300;
   var width = 650;
 
-  for(var i = 0; i < 60; i++){
+  for(var i = 0; i < 70; i++){
     var aValue = Math.floor(Math.random() * 27)+1;
     var bValue = Math.floor(Math.random() * 24)+1;
     var dataPt = {geneA : aValue, geneB : bValue};
     data.push(dataPt);
   }
 
-  for(var i = 0; i < 60; i++){
+  for(var i = 0; i < 70; i++){
     var aValue = Math.floor(Math.random() * 24)+25;
     var bValue = Math.floor(Math.random() * 29)+25;
+    var dataPt = {geneA : aValue, geneB : bValue};
+    data.push(dataPt);
+  }
+
+  for(var i = 0; i < 10; i++){
+    var aValue = Math.floor(Math.random() * 25)+4;
+    var bValue = Math.floor(Math.random() * 25)+25;
+    var dataPt = {geneA : aValue, geneB : bValue};
+    data.push(dataPt);
+  }
+
+  for(var i = 0; i < 10; i++){
+    var aValue = Math.floor(Math.random() * 24)+20;
+    var bValue = Math.floor(Math.random() * 24)+2;
     var dataPt = {geneA : aValue, geneB : bValue};
     data.push(dataPt);
   }
