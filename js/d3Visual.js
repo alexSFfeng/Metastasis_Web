@@ -10,27 +10,88 @@ window.onload = function(){
   popup = document.getElementById("modal");
 }
 
-
-function requestForGraphData(){
+/*function requestForGraphData(){
   $.ajax({
     url : "/graph?geneA=" + selectedGenes[0] + "&geneB=" + selectedGenes[1],
     method : "get",
+    */
+
+function requestForPlot(){
+  //generateGraph();
+
+  var geneA = selectedGenes[0];
+  var geneB = selectedGenes[1];
+
+  var graphBox = document.getElementById("graphBox");
+  var img = new Image();
+  img.setAttribute("height", "600");
+  img.setAttribute("width", "650");
+  img.src = "/generatePlot?geneA=" + geneA + "&geneB=" + geneB;
+  graphBox.appendChild(img);
+
+  popup.style.display="block";
+
+
+  // ajax call for generating plot
+  /*$.ajax({
+    url : 'getPlot',
+    method : "post",
+    data : {
+      targetGenes : selectedGenes
+    },
     success : function(res){
-      generateGraph(res);
+      console.log(res);
+      //res = btoa(res);
+      //generateGraph(res);
+      var graphBox = document.getElementById("graphBox");
+      var img = new Image();
+      img.setAttribute("height", "600");
+      img.setAttribute("width", "650");
+
+      //res = new Buffer(res.toString(), "binary").toString("base64");
+      //res.split("#").join("%23");
+      //img.src =  res;
+      graphBox.appendChild(img);
+      popup.style.display="block";
       alert("graph generated");
     },
     error : function(res){
       alert("failed to generate graph");
     }
-  });
+  });*/
+}
+
+// close the pop up login modal box
+function closeModal(){
+  popup.style.display="none";
 }
 
 
-// generating the graph
-function generateGraph(dataArr){
+// generating the graph takes image from server
+function generateGraph(){
 
+  console.log(" in generate graph");
+  // FRONT END GENERATE GRAPH --------------------------------------------
   // graph traits
-  var data = dataArr;
+  // var data = dataArr;
+  var data = [];
+  var height = 300;
+  var width = 650;
+
+  for(var i = 0; i < 60; i++){
+    var aValue = Math.floor(Math.random() * 27)+1;
+    var bValue = Math.floor(Math.random() * 24)+1;
+    var dataPt = {geneA : aValue, geneB : bValue};
+    data.push(dataPt);
+  }
+
+  for(var i = 0; i < 60; i++){
+    var aValue = Math.floor(Math.random() * 24)+25;
+    var bValue = Math.floor(Math.random() * 29)+25;
+    var dataPt = {geneA : aValue, geneB : bValue};
+    data.push(dataPt);
+  }
+
 
   // setup x
   var xValue = function(d) { return d.geneA;}, // data -> value
@@ -44,7 +105,7 @@ function generateGraph(dataArr){
   yScale = d3.scaleLinear().domain([0,MAX_EXPR_VALUE])
   .range([height-Y_OFFSET, Y_OFFSET_TOP]), // value -> display
   yMap = function(d) { return yScale(yValue(d));}, // data -> display
-  yAxis = d3.axisLeft(yScale).ticks(10);
+  yAxis = d3.axisLeft(yScale).ticks(5);
 
   // creating the canvas
   var canvas = d3.select(".graphContainer").append("svg")
@@ -64,7 +125,7 @@ function generateGraph(dataArr){
   .attr("transform", "translate(" + ((width-200)/2) + " ,"+(height+Y_OFFSET) +")")
   .attr("class", "x label")
   .style("text-align", "center")
-  .text("Gene A Expr Lv");
+  .text("Gene X Expr Lv");
 
   // y-axis
   canvas.append("g")
@@ -84,11 +145,6 @@ function generateGraph(dataArr){
   canvas.selectAll(".dot").data(data).enter().append("circle")
   .attr("class","dot").attr("r",2.5).attr("cx",xMap)
   .attr("cy",yMap);
-
+  //-------------------------------------------End of Generate graph------*/
   popup.style.display="block";
-}
-
-// close the pop up login modal box
-function closeModal(){
-  popup.style.display="none";
 }

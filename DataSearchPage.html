@@ -33,7 +33,7 @@
 
   <!-- ID search box -->
 <div id="searchBox">
-  <p id="searchDesc">Enter genes to search for, comma separated. For example, to search for genes AFFX-BioB-5_at and 200606_at, please enter "AFFX-BioB-5_at,200606_at".<br>
+  <p id="searchDesc">Enter genes to search for, comma separated. For example, to search for genes AFFX-BioB-5_at and 200606_at, please enter "AFFX-BioB-5_at, 200606_at".<br>
       Some genes you may wish to search for include 201316_at, 219475_at, 228962_at, 233035_at, 243917_at, 1556469_s_at, 1561576_a_at, 1570653_at, and more.</p>
   <input id="searchID" placeholder="Enter genes to search for..." type="text" required></input>
     <input class="submitBttn" id="queryBttn" type="button" value="SEARCH" onclick="sendQuery()">
@@ -126,7 +126,7 @@
         </tr>
         <tr id="graphBttn">
             <td colspan="3">
-                <button type="button" onclick="requestForGraphData()">GENERATE GRAPH</button>
+                <button type="button" onclick="requestForPlot()">GENERATE GRAPH</button>
             </td>
         </tr>
         <tr>

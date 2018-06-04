@@ -3,11 +3,8 @@ var express = require('express');
 var bodyParser = require('body-parser');
 var path = require('path');
 var config = require('../config/DB_Connect.js');
-//const SOCKET_TIME_OUT_MS = 999999999999999999;
-//const CONNECTION_TIMEOUT_MS = 999999999999999999;
-//const num_genes = 54675;
-//const num_genes = 25;
-//const num_genes = 4;
+var tmp = require('tmp');
+tmp.setGracefulCleanup();
 const url = 'mongodb://localhost:27017';
 const MongoClient = require('mongodb').MongoClient;
 //const userDB = "smallerdata";
@@ -196,6 +193,45 @@ app.get("/graph", function(req, res) {
   });
 })
 
+
+/* serves all the static files */
+app.get(/images/, function(req, res){
+     console.log('static file request : ' + req.params);
+     res.sendfile( __dirname + req.params[0]);
+});
+
+// test server side image rendering
+app.get('/generatePlot',function(req, res){
+
+  // get the selected genes to generate a graph.
+  var geneA = req.query.geneA;
+  var geneB = req.query.geneB;
+
+  // returns object { x arr, y arr}
+  //var coordinates = getCoordinates(geneA, geneB);
+
+  // genearte unique temporary file : .name = the path
+  var rCodeFile = tmp.fileSync({keep: true, postfix : ".R"});
+  var imageFile = tmp.fileSync({keep: true, postfix : ".png"});
+
+  console.log(rCodeFile);
+  console.log("Rname = " + rCodeFile.name + "\nRfile descriptor = " + rCodeFile.fd);
+  console.log("Iname = " + imageFile.name + "\nIfile descriptor = " + imageFile.fd);
+
+  /*
+  // Using file.create or file.remove
+  // Wenyi's code to generate R code files and Exectute code generate image file
+  var imagePath = generateImageFile(rCodeFile.name,imageFile.name,
+                                    coordinates.xPts, coordinates.yPts);
+  */
+
+
+  res.sendFile(imageFile.name);
+  //res.sendFile(path.join(__dirname,"../images/searching.jpg"));
+
+
+});
+
 app.get('/testSearch',function(req,res){
   var dummy = [
     {
@@ -265,7 +301,7 @@ app.get('/search',function(req,res){
           var genes = target_genestr.trim().split(',');
           console.log(genes);
           for (var n = 0; n < genes.length; n++) {
-            q["$or"].push({"ProbeId" : genes[n]});
+            q["$or"].push({"ProbeId" : genes[n].trim()});
           }
         }
 
