@@ -1,9 +1,12 @@
 /* Get the installed modules */
 var express = require('express');
+const util = require('util');
 var bodyParser = require('body-parser');
 var path = require('path');
 var config = require('../config/DB_Connect.js');
 var tmp = require('tmp');
+var fs = require('fs');
+const exec = util.promisify(require('child_process').exec);
 tmp.setGracefulCleanup();
 const url = 'mongodb://localhost:27017';
 const MongoClient = require('mongodb').MongoClient;
@@ -194,43 +197,102 @@ app.get("/graph", function(req, res) {
 })
 
 
-/* serves all the static files */
-app.get(/images/, function(req, res){
-     console.log('static file request : ' + req.params);
-     res.sendfile( __dirname + req.params[0]);
-});
-
 // test server side image rendering
-app.get('/generatePlot',function(req, res){
+app.get('/generatePlot',async function(req, res){
 
+  req.setTimeout(0);
   // get the selected genes to generate a graph.
-  var geneA = req.query.geneA;
-  var geneB = req.query.geneB;
+  //var geneA = req.query.geneA;
+  //var geneB = req.query.geneB;
 
+  var geneA = "geneA";
+  var geneB = "geneB";
   // returns object { x arr, y arr}
   //var coordinates = getCoordinates(geneA, geneB);
+  var arrayA = [10,20,40,23,43,23,44,33];
+  var arrayB = [14,12,54,26,39,43,56,23];
+
 
   // genearte unique temporary file : .name = the path
-  var rCodeFile = tmp.fileSync({keep: true, postfix : ".R"});
-  var imageFile = tmp.fileSync({keep: true, postfix : ".png"});
+  var rCodeFile = tmp.fileSync({postfix : ".R"});
+  var imageFile = tmp.fileSync({ postfix : ".png"});
 
-  console.log(rCodeFile);
-  console.log("Rname = " + rCodeFile.name + "\nRfile descriptor = " + rCodeFile.fd);
-  console.log("Iname = " + imageFile.name + "\nIfile descriptor = " + imageFile.fd);
+  //console.log("Rname = " + rCodeFile.name + "\nRfile descriptor = " + rCodeFile.fd);
+  //console.log("Iname = " + imageFile.name + "\nIfile descriptor = " + imageFile.fd);
 
-  /*
-  // Using file.create or file.remove
+  var rfileName = path.basename(rCodeFile.name);
+  var imageFileName =path.basename(imageFile.name);
+
   // Wenyi's code to generate R code files and Exectute code generate image file
-  var imagePath = generateImageFile(rCodeFile.name,imageFile.name,
-                                    coordinates.xPts, coordinates.yPts);
+  await generateImage(geneA, geneB, arrayA, arrayB, rfileName, imageFileName);
+
+
+  /*res.sendFile(path.join(__dirname,"/../" + imageFileName), function(err){
+    if(err){
+      console.log(err);
+      console.log("IN error:" + imageFileName);
+    }
+    else{
+      console.log("IN Success:" + imageFileName);
+      //imageFile.removeCallback();
+    }
+  });
   */
-
-
-  res.sendFile(imageFile.name);
-  //res.sendFile(path.join(__dirname,"../images/searching.jpg"));
-
-
 });
+
+async function generateImage(geneA, geneB, arrayA, arrayB, rFileName, imageFileName) {
+  var xaxis = geneA + " expression value";
+  var yaxis = geneB + " expression value";
+
+  console.log("in generate image:" + imageFileName);
+  var rFileContent = "geneA <- c(" + arrayA + ")\n" +
+                     "geneB <- c(" + arrayB + ")\n" +
+                     "head(cbind(geneA, geneB))\n" +
+                     "png(filename = \"" + imageFileName + "\")\n" +
+                     "plot(geneA, geneB, xlab=\"" + xaxis + "\" , ylab=\"" + yaxis + "\")\n";
+
+  fs.writeFile(rFileName, rFileContent, function(err){
+    if(err){
+      return console.log(err);
+    }
+    console.log("File written");
+  })
+
+  console.log("Finished Writing R file, now exec:");
+  //child.process
+  /*exec('/usr/local/bin/Rscript ' + rFileName,
+      (error, stdout, stderr)=> {
+        console.log(`Successfully logged ${stdout}`);
+        if(error) {
+          console.log("There's an error");
+          throw error;
+        }    }
+  );*/
+
+/*  var spawnSync = require('child_process').spawnSync;
+
+var result = spawnSync('node',
+                       ['filename.js'],
+                       {input: 'write this to stdin'});
+
+if (result.status !== 0) {
+  process.stderr.write(result.stderr);
+  process.exit(result.status);
+} else {
+  process.stdout.write(result.stdout);
+  process.stderr.write(result.stderr);
+}*/
+
+await exec('find . -type f | wc -l', (err, stdout, stderr) => {
+  console.log(`Number of files ${stdout}`);
+  if (err) {
+    console.error(`exec error: ${err}`);
+    return;
+  }
+});
+
+
+}
 
 app.get('/testSearch',function(req,res){
   var dummy = [
