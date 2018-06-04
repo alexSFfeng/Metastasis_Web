@@ -162,8 +162,7 @@ app.get("/graph", function(req, res) {
     if (err) throw err;
     var db = client.db(userDB);
 
-    if (1) {
-    //if (prev_ids.length > 0) {
+    if (prev_ids.length > 0) {
       // only get selected genes
       var q = {}
       q["$or"] = [];
@@ -171,20 +170,14 @@ app.get("/graph", function(req, res) {
       q["$or"].push({"ProbeId" : ygene});
       console.log(q);
 
-      db.collection("geneExpr").find(q).toArray(function(err, genes) {
+      db.collection("geneExpr").find(q).toArray(async function(err, genes) {
         if (err) throw err;
 
         if (genes.length > 0) {
-          var points_x = [];
-          var points_y = [];
-
-          for (var i = 0; i < prev_ids.length; i++) {
-            console.log(genes[1])
-            points_x.push(genes[0][prev_ids[i]["Array ID"]]);
-            points_y.push(genes[1][prev_ids[i]["Array ID"]]);
-          }
-          console.log("points generated")
-          res.send([points_x, points_y]);
+          console.log("num genes: " + genes.length + ", " + genes[0]);
+          const arr = await getPoints(genes);
+          console.log("sending over points now: " + (arr != null));
+          res.send(arr);
         } else {
           console.log("error, no genes found");
           throw err;
@@ -196,102 +189,177 @@ app.get("/graph", function(req, res) {
   });
 })
 
+async function getPoints(genes) {
+  try {
+    console.log("starting to get points")
+    var arrayA = [];
+    var arrayB = [];
+
+    for (var i = 0; i < prev_ids.length; i++) {
+      if (i % 1000 == 0) console.log(i)
+      if (genes[0][prev_ids[i]["Array ID"]] != NaN && genes[1][prev_ids[i]["Array ID"]] != NaN) {
+        arrayA.push(genes[0][prev_ids[i]["Array ID"]]);
+        arrayB.push(genes[1][prev_ids[i]["Array ID"]]);
+      }
+    }
+    console.log("finished getting points")
+    return [arrayA, arrayB];
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 // test server side image rendering
 app.get('/generatePlot',async function(req, res){
-
   req.setTimeout(0);
-  // get the selected genes to generate a graph.
-  //var geneA = req.query.geneA;
-  //var geneB = req.query.geneB;
-
-  var geneA = "geneA";
+  /*var geneA = "geneA";
   var geneB = "geneB";
   // returns object { x arr, y arr}
   //var coordinates = getCoordinates(geneA, geneB);
   var arrayA = [10,20,40,23,43,23,44,33];
-  var arrayB = [14,12,54,26,39,43,56,23];
+  var arrayB = [14,12,54,26,39,43,56,23];*/
 
-
-  // genearte unique temporary file : .name = the path
-  var rCodeFile = tmp.fileSync({postfix : ".R"});
-  var imageFile = tmp.fileSync({ postfix : ".png"});
-
-  //console.log("Rname = " + rCodeFile.name + "\nRfile descriptor = " + rCodeFile.fd);
-  //console.log("Iname = " + imageFile.name + "\nIfile descriptor = " + imageFile.fd);
-
-  var rfileName = path.basename(rCodeFile.name);
-  var imageFileName =path.basename(imageFile.name);
-
-  // Wenyi's code to generate R code files and Exectute code generate image file
-  await generateImage(geneA, geneB, arrayA, arrayB, rfileName, imageFileName);
-
-
-  /*res.sendFile(path.join(__dirname,"/../" + imageFileName), function(err){
-    if(err){
-      console.log(err);
-      console.log("IN error:" + imageFileName);
-    }
-    else{
-      console.log("IN Success:" + imageFileName);
-      //imageFile.removeCallback();
-    }
-  });
-  */
+  var xgene = req.query.geneA;
+  var ygene = req.query.geneB;
+  console.log("generating plot points...");
+  console.log("xgene: " + xgene + ", ygene: " + ygene);
+  const points = await generatePoints(xgene, ygene)
+  await prepForImage(points, xgene, ygene);
 });
+
+async function generatePoints(xgene, ygene) {
+  try {
+    MongoClient.connect(url, function(err, client) {
+      if (err) throw err;
+      var db = client.db(userDB);
+
+      if (prev_ids.length > 0) {
+        // only get selected genes
+        var q = {}
+        q["$or"] = [];
+        q["$or"].push({"ProbeId" : xgene});
+        q["$or"].push({"ProbeId" : ygene});
+        console.log(q);
+
+        db.collection("geneExpr").find(q).toArray(function(err, genes) {
+          if (err) throw err;
+
+          if (genes.length > 0) {
+            var arrayA = [];
+            var arrayB = [];
+            for (var i = 0; i < prev_ids.length; i++) {
+              //console.log(genes[1])
+              if (genes[0][prev_ids[i]["Array ID"]] != null && genes[1][prev_ids[i]["Array ID"]] != null) {
+                arrayA.push(genes[0][prev_ids[i]["Array ID"]]);
+                arrayB.push(genes[1][prev_ids[i]["Array ID"]]);
+              }
+            }
+
+            console.log("points generated");
+            return [arrayA, arrayB];
+          } else {
+            console.log("error, no genes found");
+            throw err;
+          }
+        });
+      } else {
+        console.log("no previous search saved"); // shouldn't happen
+      }
+    });
+  } catch (err) {
+    console.log(err);
+  }
+}
+
+async function prepForImage(arrays, xgene, ygene) {
+  try {
+    console.log("returning from generated points...");
+    var arrayA = arrays[0];
+    var arrayB = arrays[1];
+
+    // genearte unique temporary file : .name = the path
+    console.log("running this code");
+    var rCodeFile = tmp.fileSync({postfix : ".R"});
+    var imageFile = tmp.fileSync({ postfix : ".png"});
+
+    //console.log("Rname = " + rCodeFile.name + "\nRfile descriptor = " + rCodeFile.fd);
+    //console.log("Iname = " + imageFile.name + "\nIfile descriptor = " + imageFile.fd);
+
+    var rfileName = path.basename(rCodeFile.name);
+    var imageFileName =path.basename(imageFile.name);
+
+    // Wenyi's code to generate R code files and Exectute code generate image file
+    await generateImage(xgene, ygene, arrayA, arrayB, rfileName, imageFileName);
+    /*res.sendFile(path.join(__dirname,"/../" + imageFileName), function(err){
+      if(err){
+        console.log(err);
+        console.log("IN error:" + imageFileName);
+      }
+      else{
+        console.log("IN Success:" + imageFileName);
+        //imageFile.removeCallback();
+      }
+    });
+    */
+  } catch (err) {
+    console.log(err);
+  }
+}
 
 async function generateImage(geneA, geneB, arrayA, arrayB, rFileName, imageFileName) {
-  var xaxis = geneA + " expression value";
-  var yaxis = geneB + " expression value";
+  try {
+    var xaxis = geneA + " expression value";
+    var yaxis = geneB + " expression value";
 
-  console.log("in generate image:" + imageFileName);
-  var rFileContent = "geneA <- c(" + arrayA + ")\n" +
-                     "geneB <- c(" + arrayB + ")\n" +
-                     "head(cbind(geneA, geneB))\n" +
-                     "png(filename = \"" + imageFileName + "\")\n" +
-                     "plot(geneA, geneB, xlab=\"" + xaxis + "\" , ylab=\"" + yaxis + "\")\n";
+    console.log("in generate image:" + imageFileName);
+    var rFileContent = "geneA <- c(" + arrayA + ")\n" +
+                       "geneB <- c(" + arrayB + ")\n" +
+                       "head(cbind(geneA, geneB))\n" +
+                       "png(filename = \"" + imageFileName + "\")\n" +
+                       "plot(geneA, geneB, xlab=\"" + xaxis + "\" , ylab=\"" + yaxis + "\")\n";
 
-  fs.writeFile(rFileName, rFileContent, function(err){
-    if(err){
-      return console.log(err);
-    }
-    console.log("File written");
-  })
+    fs.writeFile(rFileName, rFileContent, function(err){
+      if(err){
+        return console.log(err);
+      }
+      console.log("File written");
+    })
 
-  console.log("Finished Writing R file, now exec:");
-  //child.process
-  /*exec('/usr/local/bin/Rscript ' + rFileName,
-      (error, stdout, stderr)=> {
-        console.log(`Successfully logged ${stdout}`);
-        if(error) {
-          console.log("There's an error");
-          throw error;
-        }    }
-  );*/
+    console.log("Finished Writing R file, now exec:");
+    //child.process
+    /*exec('/usr/local/bin/Rscript ' + rFileName,
+        (error, stdout, stderr)=> {
+          console.log(`Successfully logged ${stdout}`);
+          if(error) {
+            console.log("There's an error");
+            throw error;
+          }    }
+    );*/
 
-/*  var spawnSync = require('child_process').spawnSync;
+    /*  var spawnSync = require('child_process').spawnSync;
 
-var result = spawnSync('node',
-                       ['filename.js'],
-                       {input: 'write this to stdin'});
+    var result = spawnSync('node',
+                           ['filename.js'],
+                           {input: 'write this to stdin'});
 
-if (result.status !== 0) {
-  process.stderr.write(result.stderr);
-  process.exit(result.status);
-} else {
-  process.stdout.write(result.stdout);
-  process.stderr.write(result.stderr);
-}*/
+    if (result.status !== 0) {
+      process.stderr.write(result.stderr);
+      process.exit(result.status);
+    } else {
+      process.stdout.write(result.stdout);
+      process.stderr.write(result.stderr);
+    }*/
 
-await exec('find . -type f | wc -l', (err, stdout, stderr) => {
-  console.log(`Number of files ${stdout}`);
-  if (err) {
-    console.error(`exec error: ${err}`);
-    return;
+    await exec('find . -type f | wc -l', (err, stdout, stderr) => {
+      console.log(`Number of files ${stdout}`);
+      if (err) {
+        console.error(`exec error: ${err}`);
+        return;
+      }
+    });
+  } catch (err) {
+    console.log(err);
   }
-});
-
-
 }
 
 app.get('/testSearch',function(req,res){

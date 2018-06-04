@@ -75,6 +75,7 @@ function sendQuery(e){
       displayData = res;
       generateTable(displayData);
       hideGraphButton();
+      selectedGenes = [];
       alert("table generated");
     },
     error : function(res){

@@ -10,13 +10,22 @@ window.onload = function(){
   popup = document.getElementById("modal");
 }
 
-/*function requestForGraphData(){
+function requestForPlot(){
   $.ajax({
     url : "/graph?geneA=" + selectedGenes[0] + "&geneB=" + selectedGenes[1],
     method : "get",
-    */
+    success: function(res) {
+      console.log("returned points");
+      generateGraph(res);
+      alert("graph generated");
+    },
+    error: function(res) {
+      alert("failed to generate graph");
+    }
+  });
+}
 
-function requestForPlot(){
+function requestForPlot1(){
   //generateGraph();
 
   var geneA = selectedGenes[0];
@@ -32,7 +41,7 @@ function requestForPlot(){
 
 
   // ajax call for generating plot
-  /*$.ajax({
+  $.ajax({
     url : 'getPlot',
     method : "post",
     data : {
@@ -57,7 +66,7 @@ function requestForPlot(){
     error : function(res){
       alert("failed to generate graph");
     }
-  });*/
+  });
 }
 
 // close the pop up login modal box
@@ -67,13 +76,27 @@ function closeModal(){
 
 
 // generating the graph takes image from server
-function generateGraph(){
+function generateGraph(dataArr){
 
   console.log(" in generate graph");
   // FRONT END GENERATE GRAPH --------------------------------------------
   // graph traits
-  // var data = dataArr;
-  var data = [];
+  var data = dataArr;
+  console.log(data.length)
+  var height = 300;
+  var width = 650;
+
+  if (data.length == 0) {
+    alert("No such patients fit the specified filters.");
+    return;
+  }
+
+  var max = data[0];
+  for (var n = 1; n < data.length; n++) {
+    if (data[n] > max)
+      max = data[n];
+  }
+  /*var data = [];
   var height = 300;
   var width = 650;
 
@@ -104,18 +127,18 @@ function generateGraph(){
     var dataPt = {geneA : aValue, geneB : bValue};
     data.push(dataPt);
   }
-
+  */
 
   // setup x
   var xValue = function(d) { return d.geneA;}, // data -> value
-  xScale = d3.scaleLinear().domain([0,MAX_EXPR_VALUE])
+  xScale = d3.scaleLinear().domain([0, max + 0.1])
   .range([0, width-X_OFFSET]), // value -> display
   xMap = function(d) { return xScale(xValue(d));}, // data -> display
   xAxis = d3.axisBottom(xScale).ticks(10);
 
   // setup y
   var yValue = function(d) { return d.geneB;}, // data -> value
-  yScale = d3.scaleLinear().domain([0,MAX_EXPR_VALUE])
+  yScale = d3.scaleLinear().domain([0, max + 0.1])
   .range([height-Y_OFFSET, Y_OFFSET_TOP]), // value -> display
   yMap = function(d) { return yScale(yValue(d));}, // data -> display
   yAxis = d3.axisLeft(yScale).ticks(5);
